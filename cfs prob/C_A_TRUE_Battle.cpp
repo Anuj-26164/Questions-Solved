@@ -1,76 +1,81 @@
+// Qs: C_A_TRUE_Battle
+// Time: 09:45:51
+
 #include <bits/stdc++.h>
 using namespace std;
 
-#define vi vector<int>
+#define vl vector<long long>
+#define all(x) begin(x), end(x)
 #define pb push_back
 #define ll long long int
-#define forl for(int i=0;i<n;i++)
+#define f(k,n) for(int i=k;i<n;i++)
 #define nl '\n'
+#define vin(v, n) vl v(n); for (int i = 0; i < n; i++) {cin>>v[i];}
 
-//bool isEven(int n) {
-//    return (n & 1) == 0;
-//}
+// bool isprime(int n) {
+//     if (n <= 1) return false;
+//     if (n <= 3) return true;
+//     if (n % 2 == 0 || n % 3 == 0) return false;
+//     for (int i = 5; i * i <= n; i += 6) {
+//         if (n % i == 0 || n % (i + 2) == 0)
+//             return false;
+//     }
+//     return true;
+long long nCr(int n, int r) {
+       if (r > n) return 0;
+             if (r > n - r) r = n - r;
+             long long res = 1;
+             for (int i = 1; i <= r; i++) {
+                 res *= (n - r + i);
+                 res /= i;
+    }
+              return res;
+}
 
-//bool isSorted(const vi& vec) {
-//    for (size_t i = 0; i < vec.size() - 1; ++i) {
-//        if (vec[i] > vec[i + 1]) {
-//            return false;
-//        }
-//    }
-//    return true;
-//}
+void yes() {
+    cout << "YES" << endl;
+}
 
-//bool isprime(int n) {
-//    if (n <= 1) return false; // 0 and 1 are not prime
-//    if (n <= 3) return true;  // 2 and 3 are prime
-//    if (n % 2 == 0 || n % 3 == 0) return false;
-//    for (int i = 5; i * i <= n; i += 6) {
-//        if (n % i == 0 || n % (i + 2) == 0)
-//            return false;
-//    }
-//    return true;
-//}
+void no() {
+    cout << "NO" << endl;
+}
 
-//int power(int N, int M) {
-//    int power = N, sum = 1;
-//    if (N == 0) sum = 0;
-//    while (M > 0) {
-//        if ((M & 1) == 1) {
-//            sum *= power;
-//        }
-//        power = power * power;
-//        M = M >> 1;
-//    }
-//    return sum;
-//}
+#define msb(mask) (63-__builtin_clzll(mask))  /// 0 -> -1
+#define lsb(mask) __builtin_ctzll(mask)  /// 0 -> 64
+#define cntsetbit(mask) __builtin_popcountll(mask)
+#define checkbit(mask,bit) ((mask >> bit) & 1ll)
+#define onbit(mask,bit) ((mask)|(1LL<<(bit)))
+#define offbit(mask,bit) ((mask)&~(1LL<<(bit)))
+#define changebit(mask,bit) ((mask)^(1LL<<bit))
 
+void solve() {
+    ll n;
+    cin >> n;
+    string s;
+    cin >> s;
+    if(s[n-1]=='1' || s[0]=='1')
+        yes();
+    else
+    {
+        ll one = 0;
+        f(0,s.size())
+        {
+            if((s[i]=='1' && s[i+1]=='1'))
+                one++;
+        }
+        if(one)
+            yes();
+        else
+            no();
+    }
+}
 int main() {
     ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-    cout.tie(nullptr);
-    int t;
-    cin >> t;
+    cin.tie(nullptr);cout.tie(nullptr);
+    ll t;
+    cin>>t;
     while (t--) {
-        int n;cin>>n;
-        string str;
-        cin>>str;
-        vi arr;
-        for (char c : str) {
-        arr.push_back(c - '0'); 
-    }
-        for(int i=0;i<n-1;i++)
-        {
-            if(i%2==0)
-            {
-                arr[i+1]=arr[i]&arr[i+1];
-            }
-            else
-            {
-                arr[i+1]=arr[i]||arr[i+1];
-            }
-        }
-        cout<<(arr[n-1]? "YES" : "NO")<<nl;
-
+        solve();
     }
     return 0;
 }

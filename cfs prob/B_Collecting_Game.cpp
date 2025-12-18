@@ -1,5 +1,5 @@
 // Qs: B_Collecting_Game
-// Time: 19:38:31
+// Time: 12:56:34
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -10,6 +10,18 @@ using namespace std;
 #define maxval 2147483647
 #define ll long long int
 #define f(k, n) for (int i = k; i < n; i++)
+#define nkinput() \
+    int n, k;     \
+    cin >> n;     \
+    cin >> k;
+#define ninput() \
+    int n;       \
+    cin >> n;
+#define arrinput()      \
+    vl arr(n);          \
+    for (auto &c : arr) \
+        cin >> c;
+#define forl for (int i = 0; i < n; i++)
 #define nl '\n'
 
 // bool isEven(int n) {
@@ -59,6 +71,22 @@ using namespace std;
 //     return sum;
 // }
 
+int binary_search(vl &arr, ll k)
+{
+    ll lo = 0, hi = arr.size() - 1;
+    while (lo <= hi)
+    {
+        int mid = lo + (hi - lo) / 2;
+        if (arr[mid] == k)
+            return mid;
+        else if (arr[mid] < k)
+            lo = mid + 1;
+        else
+            hi = mid - 1;
+    }
+    return -1;
+}
+
 void yes()
 {
     cout << "YES" << endl;
@@ -91,38 +119,31 @@ int main()
     {
         ll n;
         cin >> n;
-        vl arr(n);
-        for (auto &c : arr)
-            cin >> c;
-        vl arr1 = arr;
-        sort(arr1.begin(), arr1.end());
-        vl diffarr(n - 1);
-        for (int i = 1; i < n; i++)
-        {
-            diffarr[i - 1] = arr1[i] - arr1[i - 1];
-        }
-        sort(diffarr.begin(), diffarr.end());
+        vl arr(n), arrc(n), sol;
+        f(0, n) cin >> arr[i];
+        vl indexes(n);
         for (int i = 0; i < n; i++)
         {
-            bool possible=false;
-            ll k = arr[i];
-            ll lo = 0, hi = n - 2, mid;
-            while (lo <= hi)
-            {
-                mid = lo + (hi - lo) / 2;
-                if (diffarr[mid] == k)
-                {
-                    cout<<mid-1<<" ";
-                    break;
-                }
-                else if (diffarr[mid] < k)
-                    lo = mid + 1;
-                else
-                    hi = mid - 1;
-            }
-            cout << mid + 1<<" ";
+            indexes[i] = i;
         }
-        cout<<nl;
+        sort(indexes.begin(), indexes.end(), [&](int a, int b)
+             { return arr[a] < arr[b]; });
+        for (int i = 0; i < n; i++)
+        {
+            ll sum = 0, count = 0;
+            sum += arr[i];
+            for (int j = 0; j < n; j++)
+            {
+                if (sum >= arr[indexes[j]] && indexes[j] != i)
+                {
+                    count++;
+                    sum += arr[indexes[j]];
+                }
+            }
+            sol.pb(count);
+        }
+        f(0, n) cout << sol[i] << " ";
+        cout << nl;
     }
     return 0;
 }

@@ -1,39 +1,22 @@
 // Qs: C_1_Skibidus_and_Fanum_Tax_easy_version
-// Time: 21:21:30
+// Time: 10:25:58
 
 #include <bits/stdc++.h>
 using namespace std;
 
+#define read(x) scanf("%lld", &x) 
+#define read2(x, y) scanf("%lld %lld", &x, &y)
+#define read3(x, y, z) scanf("%lld %lld %lld", &x, &y, &z)
+#define print(x) printf("%lld\n", x)
 #define vl vector<long long>
+#define all(x) begin(x), end(x)
 #define pb push_back
 #define minval -2147483648
 #define maxval 2147483647
 #define ll long long int
-#define f(k, n) for (int i = k; i < n; i++)
+#define f(k,n) for(int i=k;i<n;i++)
 #define nl '\n'
-
-// bool isEven(int n) {
-//     return (n & 1) == 0;
-// }
-
-// bool isSorted(const vi& vec) {
-//     for (size_t i = 0; i < vec.size() - 1; ++i) {
-//         if (vec[i] > vec[i + 1]) {
-//             return false;
-//         }
-//     }
-//     return true;
-// }
-
-// long long bin_exp(long long base, long long exp, long long mod) {
-//     long long result = 1;
-//     while (exp > 0) {
-//         if (exp & 1) result = (result * base) % mod;
-//         base = (base * base) % mod;
-//         exp >>= 1;
-//     }
-//     return result;
-// }
+#define vin(v, n) vl v(n); for (int i = 0; i < n; i++) cin >> v[i];
 
 // bool isprime(int n) {
 //     if (n <= 1) return false;
@@ -44,88 +27,50 @@ using namespace std;
 //             return false;
 //     }
 //     return true;
-// }
 
-// int power(int N, int M) {
-//     int power = N, sum = 1;
-//     if (N == 0) sum = 0;
-//     while (M > 0) {
-//         if ((M & 1) == 1) {
-//             sum *= power;
-//         }
-//         power = power * power;
-//         M = M >> 1;
-//     }
-//     return sum;
-// }
-
-int binary_search(vl &arr, ll k)
-{
-    ll lo = 0, hi = arr.size() - 1;
-    while (lo <= hi)
-    {
-        int mid = lo + (hi - lo) / 2;
-        if (arr[mid] == k)
-            return mid;
-        else if (arr[mid] < k)
-            lo = mid + 1;
-        else
-            hi = mid - 1;
-    }
-    return -1;
-}
-
-void yes()
-{
+void yes() {
     cout << "YES" << endl;
 }
 
-void no()
-{
+void no() {
     cout << "NO" << endl;
 }
 
-// ll numofdiv(ll c) {
-//     ll count = 0;
-//     for (ll i = 1; i * i <= c; i++) {
-//         if (c % i == 0) {
-//             count++;
-//             if (i != c / i) count++;
-//         }
-//     }
-//     return count;
-// }
+#define msb(mask) (63-__builtin_clzll(mask))  /// 0 -> -1
+#define lsb(mask) __builtin_ctzll(mask)  /// 0 -> 64
+#define cntsetbit(mask) __builtin_popcountll(mask)
+#define checkbit(mask,bit) ((mask >> bit) & 1ll)
+#define onbit(mask,bit) ((mask)|(1LL<<(bit)))
+#define offbit(mask,bit) ((mask)&~(1LL<<(bit)))
+#define changebit(mask,bit) ((mask)^(1LL<<bit))
 
-int main()
-{
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-    cout.tie(nullptr);
-    int t;
-    cin >> t;
-    while (t--)
-    {
-        bool possible = true;
-        ll n, k;
-        cin >> n >> k;
-        vl arr(n), arr1(k);
-        for (auto &c : arr)
-            cin >> c;
-        for (auto &c : arr1)
-            cin >> c;
-        for (int i = 0; i < n - 1; i++)
+int main() {
+    ll t;
+    read(t);
+    while (t--) {
+        ll n, m;
+        read2(n, m);
+        vin(a, n);
+        ll b;
+        read(b);
+        bool flag=true;
+        a[0]=min(a[0],b-a[0]);
+        f(1,n)
         {
-            if (arr[i + 1] >= arr[i])
+            if(a[i]>b-a[i])
             {
-                continue;
+                if(b-a[i]>=a[i-1]) a[i]=b-a[i];
             }
-            else if ((arr[i + 1] < arr[i]) && i == 0)
+            else
             {
-                arr[i] = arr1[0] - arr[i];
-                if(arr[i + 1] < arr[i])
+                if(a[i-1]>a[i]) a[i]=b-a[i];
+            }
+            if(a[i-1]>a[i])
+            {
+                flag=false;break;
             }
         }
-        (possible ? yes() : no());
+        (flag?yes():no());
     }
     return 0;
 }
