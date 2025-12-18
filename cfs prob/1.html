@@ -1,0 +1,17 @@
+<html>
+<body style="background:black;color:white;font-size:60px;display:flex;justify-content:center;align-items:center;height:100vh">
+<div id="countdown"></div>
+<script>
+const endDate = new Date("Dec 31, 2025 23:59:59").getTime();
+setInterval(() => {
+  const now = new Date().getTime();
+  const diff = endDate - now;
+  const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const m = Math.floor((diff / (1000 * 60)) % 60);
+  const s = Math.floor((diff / 1000) % 60);
+  document.getElementById("countdown").innerHTML = `${d}d ${h}h ${m}m ${s}s`;
+}, 1000);
+</script>
+</body>
+</html>
