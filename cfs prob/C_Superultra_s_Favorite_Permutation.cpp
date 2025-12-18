@@ -1,102 +1,122 @@
-// Qs: C_Superultra_s_Favorite_Permutation
-// Time: 20:00:46
-
 #include <bits/stdc++.h>
 using namespace std;
 
-#define vl vector<long long>
-#define all(x) begin(x), end(x)
+#define vi vector<int>
 #define pb push_back
-#define ll long long int
-#define f(k,n) for(int i=k;i<n;i++)
+#define lli long long int
+#define forl for (int i = 0; i < n; i++)
 #define nl '\n'
-#define vin(v, n) vl v(n); for (int i = 0; i < n; i++) {cin>>v[i];}
 
-//long long bin_exp(long long base, long long exp, long long mod) {
-//    long long result = 1;
-//    while (exp > 0) {
-//        if (exp & 1) result = (result * base) % mod;
-//        base = (base * base) % mod;
-//        exp >>= 1;
-//    }
-//    return result;
-//}
-
-// bool isprime(int n) {
-//     if (n <= 1) return false;
-//     if (n <= 3) return true;
-//     if (n % 2 == 0 || n % 3 == 0) return false;
-//     for (int i = 5; i * i <= n; i += 6) {
-//         if (n % i == 0 || n % (i + 2) == 0)
-//             return false;
-//     }
-//     return true;
-long long nCr(int n, int r) {
-       if (r > n) return 0;
-             if (r > n - r) r = n - r;
-             long long res = 1;
-             for (int i = 1; i <= r; i++) {
-                 res *= (n - r + i);
-                 res /= i;
-    }
-              return res;
+bool isEven(int n)
+{
+    return (n & 1) == 0;
 }
 
-void yes() {
-    cout << "YES" << endl;
-}
-
-void no() {
-    cout << "NO" << endl;
-}
-
-#define msb(mask) (63-__builtin_clzll(mask))  /// 0 -> -1
-#define lsb(mask) __builtin_ctzll(mask)  /// 0 -> 64
-#define cntsetbit(mask) __builtin_popcountll(mask)
-#define checkbit(mask,bit) ((mask >> bit) & 1ll)
-#define onbit(mask,bit) ((mask)|(1LL<<(bit)))
-#define offbit(mask,bit) ((mask)&~(1LL<<(bit)))
-#define changebit(mask,bit) ((mask)^(1LL<<bit))
-
-void solve() {
-    ll n;
-    cin >> n;
-    if(n<=4)
-        cout << -1 << nl;
-    else
+bool isSorted(const vi &vec)
+{
+    for (size_t i = 0; i < vec.size() - 1; ++i)
     {
-        if(n==5)
-            cout << 2 << " " << 4 << " " << 5 << " " << " " << 3 << " " << 1 << nl;
-        else
+        if (vec[i] > vec[i + 1])
         {
-            vl even, odd;
-            for (int i = 1; i <= n;i++)
+            return false;
+        }
+    }
+    return true;
+}
+
+bool isprime(int n)
+{
+    if (n <= 1)
+        return false; // 0 and 1 are not prime
+    if (n <= 3)
+        return true; // 2 and 3 are prime
+    if (n % 2 == 0 || n % 3 == 0)
+        return false;
+    for (int i = 5; i * i <= n; i += 6)
+    {
+        if (n % i == 0 || n % (i + 2) == 0)
+            return false;
+    }
+    return true;
+}
+
+int power(int N, int M)
+{
+    int power = N, sum = 1;
+    if (N == 0)
+        sum = 0;
+    while (M > 0)
+    {
+        if ((M & 1) == 1)
+        {
+            sum *= power;
+        }
+        power = power * power;
+        M = M >> 1;
+    }
+    return sum;
+}
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    int t;
+    cin >> t;
+    while (t--)
+    {
+        int n, m, o;
+        bool possible = false;
+        cin >> n;
+        n+=1;
+        for (int i = 1; i < n; i += 2)
+        {
+            if (possible == false)
             {
-                if(i%2&&i!=3)
-                    odd.push_back(i);
-                else if(i%2==0&&i!=6)
-                    even.push_back(i);
+                for (int j = 2; j < n; j += 2)
+                {
+                    if (!isprime(i + j))
+                    {
+                        m = i;
+                        o = j;
+                        possible = true;
+                        break;
+                    }
+                }
             }
-            f(0,odd.size())
+        }
+        if (possible)
+        {
+            for (int i = 1; i < n; i += 2)
             {
-                cout << odd[i] << " ";
+                if (i == m)
+                {
+                    continue;
+                }
+                else
+                {
+                    cout << i << " ";
+                }
             }
-            cout << 3 << " " << 6 << " ";
-            f(0, even.size())
+            cout << m << " " << o << " ";
+            for (int i = 2; i < n; i += 2)
             {
-                cout << even[i] << " ";
+                if (i == o)
+                {
+                    continue;
+                }
+                else
+                {
+                    cout << i << " ";
+                }
             }
             cout << nl;
         }
+        else
+        {
+            cout << -1 << nl;
+        }
     }
-}
-int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);cout.tie(nullptr);
-    ll t;
-    cin>>t;
-    while (t--) {
-        solve();
-    }
+
     return 0;
 }

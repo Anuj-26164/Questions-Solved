@@ -1,25 +1,22 @@
-// Qs: C_Equal_Values
-// Time: 21:55:49
+// Qs: B_Binomial_Coefficients_Kind_Of
+// Time: 07:07:46
 
 #include <bits/stdc++.h>
 using namespace std;
 
-#define read(x) scanf("%lld", &x)
-#define read2(x, y) scanf("%lld %lld", &x, &y)
-#define read3(x, y, z) scanf("%lld %lld %lld", &x, &y, &z)
-#define print(x) printf("%lld\n", x)
 #define vl vector<long long>
+#define vec2d(name, n, m, val) vector<vector<ll>> name(n, vector<ll>(m, val))
 #define all(x) begin(x), end(x)
 #define pb push_back
-#define minval -2147483648
-#define maxval 2147483647
 #define ll long long int
 #define f(k, n) for (int i = k; i < n; i++)
 #define nl '\n'
 #define vin(v, n)               \
     vl v(n);                    \
     for (int i = 0; i < n; i++) \
-        read(v[i]);
+    {                           \
+        cin >> v[i];            \
+    }
 
 // bool isprime(int n) {
 //     if (n <= 1) return false;
@@ -30,6 +27,20 @@ using namespace std;
 //             return false;
 //     }
 //     return true;
+long long nCr(int n, int r)
+{
+    if (r > n)
+        return 0;
+    if (r > n - r)
+        r = n - r;
+    long long res = 1;
+    for (int i = 1; i <= r; i++)
+    {
+        res *= (n - r + i);
+        res /= i;
+    }
+    return res;
+}
 
 void yes()
 {
@@ -49,42 +60,41 @@ void no()
 #define offbit(mask, bit) ((mask) & ~(1LL << (bit)))
 #define changebit(mask, bit) ((mask) ^ (1LL << bit))
 
+#define MOD 1000000007
+ll binpow(ll a, ll b, ll m)
+{
+    ll res = 1;
+    a %= m;
+    while (b > 0)
+    {
+        if (b & 1)
+            res = res * a % m;
+        a = a * a % m;
+        b >>= 1;
+    }
+    return res;
+}
+
 void solve()
 {
     ll n;
     cin >> n;
-    vin(arr, n);
-    vl mincost;
-    for (auto c : arr)
+    vin(v, n);
+    vin(k, n);
+    f(0, n)
     {
-        mincost.push_back(c * (n - 1));
+        cout << binpow(2, k[i], MOD) << nl;
     }
-    vector<pair<int, int>> vp;
-    ll first = 0, second = 1;
-    while (second <= n) 
-    {
-        if (second == n || arr[second] != arr[first])
-        {
-            if(first!=second-1)
-            {vp.push_back({first, second - 1});}
-            first = second;
-        }
-        second++;
-    }
-
-    for (auto c : vp)
-    {
-         mincost.push_back(c.first * arr[c.first] + (n - c.second-1) * arr[c.first]);
-        // cout << c.first << " " << c.second << nl;
-    }
-    sort(all(mincost));
-    cout << mincost[0] << nl;
 }
+
 int main()
 {
-    ll t;
-    read(t);
-    while (t--)
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+    // ll t;
+    // cin >> t;
+    // while (t--)
     {
         solve();
     }

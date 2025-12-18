@@ -1,5 +1,5 @@
-// Qs: C_1_Skibidus_and_Fanum_Tax_easy_version
-// Time: 21:21:30
+// Qs: B_Collecting_Game
+// Time: 12:56:34
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -10,6 +10,18 @@ using namespace std;
 #define maxval 2147483647
 #define ll long long int
 #define f(k, n) for (int i = k; i < n; i++)
+#define nkinput() \
+    int n, k;     \
+    cin >> n;     \
+    cin >> k;
+#define ninput() \
+    int n;       \
+    cin >> n;
+#define arrinput()      \
+    vl arr(n);          \
+    for (auto &c : arr) \
+        cin >> c;
+#define forl for (int i = 0; i < n; i++)
 #define nl '\n'
 
 // bool isEven(int n) {
@@ -105,27 +117,33 @@ int main()
     cin >> t;
     while (t--)
     {
-        bool possible = true;
-        ll n, k;
-        cin >> n >> k;
-        vl arr(n), arr1(k);
-        for (auto &c : arr)
-            cin >> c;
-        for (auto &c : arr1)
-            cin >> c;
-        for (int i = 0; i < n - 1; i++)
+        ll n;
+        cin >> n;
+        vl arr(n), arrc(n), sol;
+        f(0, n) cin >> arr[i];
+        vl indexes(n);
+        for (int i = 0; i < n; i++)
         {
-            if (arr[i + 1] >= arr[i])
-            {
-                continue;
-            }
-            else if ((arr[i + 1] < arr[i]) && i == 0)
-            {
-                arr[i] = arr1[0] - arr[i];
-                if(arr[i + 1] < arr[i])
-            }
+            indexes[i] = i;
         }
-        (possible ? yes() : no());
+        sort(indexes.begin(), indexes.end(), [&](int a, int b)
+             { return arr[a] < arr[b]; });
+        for (int i = 0; i < n; i++)
+        {
+            ll sum = 0, count = 0;
+            sum += arr[i];
+            for (int j = 0; j < n; j++)
+            {
+                if (sum >= arr[indexes[j]] && indexes[j] != i)
+                {
+                    count++;
+                    sum += arr[indexes[j]];
+                }
+            }
+            sol.pb(count);
+        }
+        f(0, n) cout << sol[i] << " ";
+        cout << nl;
     }
     return 0;
 }

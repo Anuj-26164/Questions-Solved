@@ -1,5 +1,5 @@
-// Qs: A_Square_of_Rectangles
-// Time: 22:43:25
+// Qs: C_1_Skibidus_and_Fanum_Tax_easy_version
+// Time: 10:25:58
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -16,7 +16,7 @@ using namespace std;
 #define ll long long int
 #define f(k,n) for(int i=k;i<n;i++)
 #define nl '\n'
-#define vin(v, n) vl v(n); for (int i = 0; i < n; i++) read(v[i]);
+#define vin(v, n) vl v(n); for (int i = 0; i < n; i++) cin >> v[i];
 
 // bool isprime(int n) {
 //     if (n <= 1) return false;
@@ -27,15 +27,6 @@ using namespace std;
 //             return false;
 //     }
 //     return true;
-
-bool isPerfectSquare(int n)
-{
-    if (n < 0)
-        return false;
-
-    int root = sqrt(n);
-    return root * root == n;
-}
 
 void yes() {
     cout << "YES" << endl;
@@ -53,30 +44,33 @@ void no() {
 #define offbit(mask,bit) ((mask)&~(1LL<<(bit)))
 #define changebit(mask,bit) ((mask)^(1LL<<bit))
 
-void solve() {
-    int l1, b1, l2, b2, l3, b3;
-    cin >> l1 >> b1 >> l2 >> b2 >> l3 >> b3;
-    if(!isPerfectSquare(l1*b1+l2*b2+l3*b3))
-        no();
-    else
-    {
-        if((l1==(l2+l3))&&(l1==(b1+b2))&&(b2==b3))
-            yes();
-        else if ((b1 == (b2 + b3))&&(b1==(l1+l2))&&(l2==l3))
-            yes();
-        else if((l1==l2)&&(l2==l3)&&((b1+b2+b3)==l1))
-            yes();
-        else if((b1==b2)&&(b2==b3)&&((l1+l2+l3)==b1))
-            yes();
-        else
-            no();
-    }
-}
 int main() {
     ll t;
     read(t);
     while (t--) {
-        solve();
+        ll n, m;
+        read2(n, m);
+        vin(a, n);
+        ll b;
+        read(b);
+        bool flag=true;
+        a[0]=min(a[0],b-a[0]);
+        f(1,n)
+        {
+            if(a[i]>b-a[i])
+            {
+                if(b-a[i]>=a[i-1]) a[i]=b-a[i];
+            }
+            else
+            {
+                if(a[i-1]>a[i]) a[i]=b-a[i];
+            }
+            if(a[i-1]>a[i])
+            {
+                flag=false;break;
+            }
+        }
+        (flag?yes():no());
     }
     return 0;
 }

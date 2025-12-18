@@ -1,102 +1,81 @@
-// Qs: B_Binomial_Coefficients_Kind_Of
-// Time: 07:07:46
-
 #include <bits/stdc++.h>
 using namespace std;
 
-#define vl vector<long long>
-#define vec2d(name, n, m, val) vector<vector<ll>> name(n, vector<ll>(m, val))
-#define all(x) begin(x), end(x)
+#define vi vector<int>
 #define pb push_back
 #define ll long long int
-#define f(k, n) for (int i = k; i < n; i++)
+#define forl for(int i=0;i<n;i++)
 #define nl '\n'
-#define vin(v, n)               \
-    vl v(n);                    \
-    for (int i = 0; i < n; i++) \
-    {                           \
-        cin >> v[i];            \
+
+//bool isEven(int n) {
+//    return (n & 1) == 0;
+//}
+
+//bool isSorted(const vi& vec) {
+//    for (size_t i = 0; i < vec.size() - 1; ++i) {
+//        if (vec[i] > vec[i + 1]) {
+//            return false;
+//        }
+//    }
+//    return true;
+//}
+
+//bool isprime(int n) {
+//    if (n <= 1) return false; // 0 and 1 are not prime
+//    if (n <= 3) return true;  // 2 and 3 are prime
+//    if (n % 2 == 0 || n % 3 == 0) return false;
+//    for (int i = 5; i * i <= n; i += 6) {
+//        if (n % i == 0 || n % (i + 2) == 0)
+//            return false;
+//    }
+//    return true;
+//}
+
+//int power(int N, int M) {
+//    int power = N, sum = 1;
+//    if (N == 0) sum = 0;
+//    while (M > 0) {
+//        if ((M & 1) == 1) {
+//            sum *= power;
+//        }
+//        power = power * power;
+//        M = M >> 1;
+//    }
+//    return sum;
+//}
+const int MOD = 1e9 + 7;
+
+long long modularExponentiation(long long base, long long exp, long long mod) {
+    long long result = 1;
+    while (exp > 0) {
+        if (exp % 2 == 1) { // If the current bit is 1
+            result = (result * base) % mod;
+        }
+        base = (base * base) % mod; // Square the base
+        exp /= 2; // Move to the next bit
     }
-
-// bool isprime(int n) {
-//     if (n <= 1) return false;
-//     if (n <= 3) return true;
-//     if (n % 2 == 0 || n % 3 == 0) return false;
-//     for (int i = 5; i * i <= n; i += 6) {
-//         if (n % i == 0 || n % (i + 2) == 0)
-//             return false;
-//     }
-//     return true;
-long long nCr(int n, int r)
-{
-    if (r > n)
-        return 0;
-    if (r > n - r)
-        r = n - r;
-    long long res = 1;
-    for (int i = 1; i <= r; i++)
-    {
-        res *= (n - r + i);
-        res /= i;
-    }
-    return res;
+    return result;
 }
 
-void yes()
-{
-    cout << "YES" << endl;
-}
-
-void no()
-{
-    cout << "NO" << endl;
-}
-
-#define msb(mask) (63 - __builtin_clzll(mask)) /// 0 -> -1
-#define lsb(mask) __builtin_ctzll(mask)        /// 0 -> 64
-#define cntsetbit(mask) __builtin_popcountll(mask)
-#define checkbit(mask, bit) ((mask >> bit) & 1ll)
-#define onbit(mask, bit) ((mask) | (1LL << (bit)))
-#define offbit(mask, bit) ((mask) & ~(1LL << (bit)))
-#define changebit(mask, bit) ((mask) ^ (1LL << bit))
-
-#define MOD 1000000007
-ll binpow(ll a, ll b, ll m)
-{
-    ll res = 1;
-    a %= m;
-    while (b > 0)
-    {
-        if (b & 1)
-            res = res * a % m;
-        a = a * a % m;
-        b >>= 1;
-    }
-    return res;
-}
-
-void solve()
-{
-    ll n;
-    cin >> n;
-    vin(v, n);
-    vin(k, n);
-    f(0, n)
-    {
-        cout << binpow(2, k[i], MOD) << nl;
-    }
-}
-
-int main()
-{
+int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
-    // ll t;
-    // cin >> t;
-    // while (t--)
+    int t;
+    cin >> t;
+    vi base(t);
+    for(int i=0;i<t;i++)
     {
-        solve();
+        cin>>base[i];
+    }
+    vi kk(t);
+    for(int i=0;i<t;i++)
+    {
+        cin>>kk[i];
+    }
+    for(int i=0;i<t;i++)
+    {
+        cout<<modularExponentiation(2,kk[i],MOD)<<nl;
     }
     return 0;
 }

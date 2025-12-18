@@ -1,25 +1,21 @@
 // Qs: C_Equal_Values
-// Time: 21:55:49
+// Time: 20:19:40
 
 #include <bits/stdc++.h>
 using namespace std;
 
-#define read(x) scanf("%lld", &x)
-#define read2(x, y) scanf("%lld %lld", &x, &y)
-#define read3(x, y, z) scanf("%lld %lld %lld", &x, &y, &z)
-#define print(x) printf("%lld\n", x)
 #define vl vector<long long>
 #define all(x) begin(x), end(x)
 #define pb push_back
-#define minval -2147483648
-#define maxval 2147483647
 #define ll long long int
 #define f(k, n) for (int i = k; i < n; i++)
 #define nl '\n'
 #define vin(v, n)               \
     vl v(n);                    \
     for (int i = 0; i < n; i++) \
-        read(v[i]);
+    {                           \
+        cin >> v[i];            \
+    }
 
 // bool isprime(int n) {
 //     if (n <= 1) return false;
@@ -30,6 +26,20 @@ using namespace std;
 //             return false;
 //     }
 //     return true;
+long long nCr(int n, int r)
+{
+    if (r > n)
+        return 0;
+    if (r > n - r)
+        r = n - r;
+    long long res = 1;
+    for (int i = 1; i <= r; i++)
+    {
+        res *= (n - r + i);
+        res /= i;
+    }
+    return res;
+}
 
 void yes()
 {
@@ -53,37 +63,40 @@ void solve()
 {
     ll n;
     cin >> n;
-    vin(arr, n);
-    vl mincost;
-    for (auto c : arr)
+    vin(v, n);
+    ll mincost = v[0]*(n-1);
+    int i = 0, j = 1;
+    for (int i = 0; i < n; i++)
     {
-        mincost.push_back(c * (n - 1));
-    }
-    vector<pair<int, int>> vp;
-    ll first = 0, second = 1;
-    while (second <= n) 
-    {
-        if (second == n || arr[second] != arr[first])
+        int j = i;
+        ll cost = 0;
+        while ((v[j] == v[i]) && (j + 1 < n))
         {
-            if(first!=second-1)
-            {vp.push_back({first, second - 1});}
-            first = second;
+            j++;
         }
-        second++;
+        if (i == 0 && j == n - 1)
+        {
+            cost = 0;
+        }
+        if (i > 0&&i<n-1)
+        {
+            cost += (i + n - j) * (v[i]);
+        }
+        else if
+        {
+            cost += (n - j - 1) * (v[i]);
+        }
+        mincost = min(cost, mincost);
     }
-
-    for (auto c : vp)
-    {
-         mincost.push_back(c.first * arr[c.first] + (n - c.second-1) * arr[c.first]);
-        // cout << c.first << " " << c.second << nl;
-    }
-    sort(all(mincost));
-    cout << mincost[0] << nl;
+    cout << mincost << nl;
 }
 int main()
 {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
     ll t;
-    read(t);
+    cin >> t;
     while (t--)
     {
         solve();

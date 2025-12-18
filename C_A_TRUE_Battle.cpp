@@ -1,22 +1,16 @@
-// Qs: A_Square_of_Rectangles
-// Time: 22:43:25
+// Qs: C_A_TRUE_Battle
+// Time: 09:45:51
 
 #include <bits/stdc++.h>
 using namespace std;
 
-#define read(x) scanf("%lld", &x) 
-#define read2(x, y) scanf("%lld %lld", &x, &y)
-#define read3(x, y, z) scanf("%lld %lld %lld", &x, &y, &z)
-#define print(x) printf("%lld\n", x)
 #define vl vector<long long>
 #define all(x) begin(x), end(x)
 #define pb push_back
-#define minval -2147483648
-#define maxval 2147483647
 #define ll long long int
 #define f(k,n) for(int i=k;i<n;i++)
 #define nl '\n'
-#define vin(v, n) vl v(n); for (int i = 0; i < n; i++) read(v[i]);
+#define vin(v, n) vl v(n); for (int i = 0; i < n; i++) {cin>>v[i];}
 
 // bool isprime(int n) {
 //     if (n <= 1) return false;
@@ -27,14 +21,15 @@ using namespace std;
 //             return false;
 //     }
 //     return true;
-
-bool isPerfectSquare(int n)
-{
-    if (n < 0)
-        return false;
-
-    int root = sqrt(n);
-    return root * root == n;
+long long nCr(int n, int r) {
+       if (r > n) return 0;
+             if (r > n - r) r = n - r;
+             long long res = 1;
+             for (int i = 1; i <= r; i++) {
+                 res *= (n - r + i);
+                 res /= i;
+    }
+              return res;
 }
 
 void yes() {
@@ -54,27 +49,31 @@ void no() {
 #define changebit(mask,bit) ((mask)^(1LL<<bit))
 
 void solve() {
-    int l1, b1, l2, b2, l3, b3;
-    cin >> l1 >> b1 >> l2 >> b2 >> l3 >> b3;
-    if(!isPerfectSquare(l1*b1+l2*b2+l3*b3))
-        no();
+    ll n;
+    cin >> n;
+    string s;
+    cin >> s;
+    if(s[n-1]=='1' || s[0]=='1')
+        yes();
     else
     {
-        if((l1==(l2+l3))&&(l1==(b1+b2))&&(b2==b3))
-            yes();
-        else if ((b1 == (b2 + b3))&&(b1==(l1+l2))&&(l2==l3))
-            yes();
-        else if((l1==l2)&&(l2==l3)&&((b1+b2+b3)==l1))
-            yes();
-        else if((b1==b2)&&(b2==b3)&&((l1+l2+l3)==b1))
+        ll one = 0;
+        f(0,s.size())
+        {
+            if((s[i]=='1' && s[i+1]=='1'))
+                one++;
+        }
+        if(one)
             yes();
         else
             no();
     }
 }
 int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);cout.tie(nullptr);
     ll t;
-    read(t);
+    cin>>t;
     while (t--) {
         solve();
     }
