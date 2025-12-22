@@ -1,0 +1,9 @@
+# Helpers
+.cph/
+.cph-ng/
+
+# VS Code settings
+.vscode/
+
+# Windows executables
+*.exe
