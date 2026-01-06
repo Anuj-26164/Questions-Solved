@@ -1,61 +1,49 @@
 #include <bits/stdc++.h>
-#define ent '\n'
-#define int long long
-
 using namespace std;
-typedef long long ll;
 
-const int mod = 1e9 + 7;
+#define nl '\n'
 
-const int maxn = 1'000'000 + 12;
-
-int a[maxn];
-int n, k;
-
-int get(vector<int> a)
+long long calc(char ch, const string &s)
 {
-    if (a.empty())
-        return 0;
+    vector<long long> pos;
+    for (int i = 0; i < (int)s.size(); i++)
+        if (s[i] == ch)
+            pos.push_back(i);
 
-    int pos = (int)a.size() / 2, val = 0;
-    for (int i = 0; i < a.size(); i++)
-    {
-        val += abs(abs(a[pos] - a[i]) - abs(pos - i));
-    }
+    if (pos.empty())
+        return LLONG_MAX;
 
-    return val;
+    int k = pos.size();
+    vector<long long> adj(k);
+    for (int i = 0; i < k; i++)
+        adj[i] = pos[i] - i;
+
+    long long med = adj[k / 2];
+
+    long long cost = 0;
+    for (int i = 0; i < k; i++)
+        cost += llabs(adj[i] - med);
+
+    return cost;
 }
 
 void solve()
 {
+    int n;
     cin >> n;
-    vector<int> a, b;
-    for (int i = 1; i <= n; i++)
-    {
-        char c;
-        cin >> c;
+    string s;
+    cin >> s;
 
-        if (c == 'a')
-        {
-            a.push_back(i);
-        }
-        else
-            b.push_back(i);
-    }
-
-    cout << min(get(a), get(b)) << ent;
+    long long ans = min(calc('a', s), calc('b', s));
+    cout << ans << nl;
 }
 
-int32_t main()
+int main()
 {
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
-    cout.tie(0);
-
-    int t = 1;
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    int t;
     cin >> t;
-    while (t--)
-    {
-        solve();
-    }
+    while(t--)
+    solve();
 }
