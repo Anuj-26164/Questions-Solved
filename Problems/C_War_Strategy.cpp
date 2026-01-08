@@ -68,7 +68,17 @@ void no() {
 //const int N = 1001, M = 11, MOD = 1e9 + 7;
 //ll n, m, dp[M][N][N];
 void solve() {
-    
+    int n, m, k;
+    cin >> n >> m >> k;
+    int s1 = max(k - 1, n - k), s2 = min(k - 1, n - k);
+
+    if ((3 * s2 - 1) >= m)
+        cout << 1 + ((2 * (m + 1)) / 3) << "\n";
+    else
+    {
+        m -= (3 * s2 - 1);
+        cout << 1 + 2 * s2 + min(m / 2, s1 - s2) << "\n";
+    }
 }
 int32_t main() {
     ios::sync_with_stdio(false);
