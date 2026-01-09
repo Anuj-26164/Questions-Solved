@@ -1,100 +1,112 @@
-    // Qs: G_Sum_of_Two_Values
-    // Time: 17:36:16
-     
-    #include <bits/stdc++.h>
-    using namespace std;
-     
-    #define read(x) scanf("%lld", &x)
-    #define read2(x, y) scanf("%lld %lld", &x, &y)
-    #define read3(x, y, z) scanf("%lld %lld %lld", &x, &y, &z)
-    #define print(x) printf("%lld\n", x)
-    #define vl vector<long long>
-    #define all(x) begin(x), end(x)
-    #define pb push_back
-    #define minval -2147483648
-    #define maxval 2147483647
-    #define ll long long int
-    #define f(k, n) for (int i = k; i < n; i++)
-    #define nl '\n'
-    #define vin(v, n)               \
-        vl v(n);                    \
-        for (int i = 0; i < n; i++) \
-            read(v[i]);
-     
-    // bool isprime(int n) {
-    //     if (n <= 1) return false;
-    //     if (n <= 3) return true;
-    //     if (n % 2 == 0 || n % 3 == 0) return false;
-    //     for (int i = 5; i * i <= n; i += 6) {
-    //         if (n % i == 0 || n % (i + 2) == 0)
-    //             return false;
-    //     }
-    //     return true;
-     
-    void yes()
+// Qs: G_Sum_of_Two_Values
+// Time: 00:55:44
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define vl vector<long long>
+#define all(x) begin(x), end(x)
+#define pb push_back
+#define int long long
+#define ll long long
+#define f(i,k,n) for(int i=k;i<n;i++)
+#define nl cout<<endl;
+#define vin(v, n) vl v(n); for (int i = 0; i < n; i++) {cin>>v[i];}
+#define vout(v,i,k,n) do { for (int i = k; i < n; i++) cout << v[i] << " "; cout << "\n"; } while(0)
+#define ff first
+#define ss second
+#define MOD 1000000007LL
+const ll INF = 4e18;
+template<class T, class Container = vector<T>>
+using maxheap = priority_queue<T, Container, less<T>>;
+template<class T, class Container = vector<T>>
+using minheap = priority_queue<T, Container, greater<T>>;
+#define DP1(v, n) vector<long long> v((n)+1, -1)
+#define DP2(v, n, m) vector<vector<long long>> v((n)+1, vector<long long>((m)+1, -1))
+#define pll pair<long long,long long>
+#define debug(x) cerr << #x << " = " << x << nl;
+
+template<typename T>
+ostream& operator<<(ostream &os, const vector<T> &v) {
+    os << "[";
+    for(size_t i = 0; i < v.size(); i++) os << (i ? ", " : "") << v[i];
+    return os << "]";
+}
+
+template<typename T, typename U>
+ostream& operator<<(ostream &os, const pair<T,U> &p) {
+    return os << "(" << p.first << ", " << p.second << ")";
+}
+
+template<typename T>
+ostream& operator<<(ostream &os, const set<T> &s) {
+    os << "{";
+    bool f = true;
+    for(auto &x : s) os << (f ? "" : ", ") << x, f = false;
+    return os << "}";
+}
+
+template<typename T, typename U>
+ostream& operator<<(ostream &os, const map<T,U> &m) {
+    os << "{";
+    bool f = true;
+    for(auto &x : m) os << (f ? "" : ", ") << x, f = false;
+    return os << "}";
+}
+
+
+void yes() {
+    cout << "YES" << endl;
+}
+
+void no() {
+    cout << "NO" << endl;
+}
+
+int msb(int mask) {
+if (mask == 0) return -1;
+return 63 - __builtin_clzll(mask);
+}
+#define lsb(mask) __builtin_ctzll(mask) /// 0 -> 64
+#define cntsetbit(mask) __builtin_popcountll(mask)
+#define checkbit(mask,bit) ((mask >> bit) & 1ll)
+#define onbit(mask,bit) ((mask)|(1LL<<(bit)))
+#define offbit(mask,bit) ((mask)&~(1LL<<(bit)))
+#define changebit(mask,bit) ((mask)^(1LL<<bit))
+
+//const int N = 1001, M = 11, MOD = 1e9 + 7;
+//ll n, m, dp[M][N][N];
+void solve() {
+    int n, target;
+    cin >> n >> target;
+    vector<pair<int, int>> v(n);
+    f(i,0,n)
     {
-        cout << "YES" << endl;
+        cin >> v[i].ff;
+        v[i].ss = i;
     }
-     
-    void no()
+    sort(all(v));
+    int l = 0, r = n - 1;
+    while(l<r)
     {
-        cout << "NO" << endl;
-    }
-     
-    #define msb(mask) (63 - __builtin_clzll(mask)) /// 0 -> -1
-    #define lsb(mask) __builtin_ctzll(mask)        /// 0 -> 64
-    #define cntsetbit(mask) __builtin_popcountll(mask)
-    #define checkbit(mask, bit) ((mask >> bit) & 1ll)
-    #define onbit(mask, bit) ((mask) | (1LL << (bit)))
-    #define offbit(mask, bit) ((mask) & ~(1LL << (bit)))
-    #define changebit(mask, bit) ((mask) ^ (1LL << bit))
-     
-    void solve()
-    {
-        ll n, x;
-        cin>>n>>x;
-        vin(a, n);
-        vl v = a;
-        sort(all(v));
-        ll l = 0, r = n - 1;
-        while (r > l)
+        int sum = v[l].ff + v[r].ff;
+        if(sum==target)
         {
-            if (v[r] + v[l] > x)
-                r--;
-            else if (v[r] + v[l] < x)
-                l++;
-            else
-                break;
+            cout << v[l].ss + 1 << " " << v[r].ss + 1; 
+            return ;
         }
-        if (v[r] + v[l] != x || r == l)
-            cout<<"IMPOSSIBLE"<<nl;
+        if(sum<target)
+            l++;
         else
-        {
-            int idx1,idx2=-1;
-            f(0,n)
-            {
-                if(a[i]==v[r])
-                {
-                    idx1=i+1;
-                    break;
-                }
-            }
-            f(0,n)
-            {
-                if(a[i]==v[l] && i+1!=idx1)
-                {
-                    idx2=i+1;
-                    break;
-                }
-            }
-            if(idx2==-1) cout<<"IMPOSSIBLE"<<nl;
-            else cout<<idx1<<" "<<idx2<<nl;
-        }
+            r--;
     }
-    int main()
-    {
-        {
-            solve();
-        }
-        return 0;
+    cout << -1;
+}
+int32_t main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);cout.tie(nullptr);
+     {
+        solve();
     }
+    return 0;
+}

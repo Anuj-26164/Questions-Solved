@@ -8,7 +8,7 @@ int main()
 
     int t;
     cin >> t;
-    while (t--)
+    for (int i = 1; i <= t;i++)
     {
         int n;
         cin >> n;
@@ -26,28 +26,35 @@ int main()
         queue<int> q;
         q.push(1);
         depth[1] = 0;
-
+        int ans = 1;
         while (!q.empty())
         {
-            int u = q.front();
-            q.pop();
-            for (int v : adj[u])
+            int sz = q.size();
+            ans = max(ans, sz);
+
+            for (int i = 0; i < sz; i++)
             {
-                if (depth[v] == -1)
+                int u = q.front();
+                q.pop();
+
+                for (int v : adj[u])
                 {
-                    depth[v] = depth[u] + 1;
-                    q.push(v);
+                    if (depth[v] == -1)
+                    {
+                        depth[v] = depth[u] + 1;
+                        q.push(v);
+                    }
                 }
             }
         }
 
-        unordered_map<int, int> cnt;
-        int ans = 0;
         for (int i = 1; i <= n; i++)
         {
-            ans = max(ans, ++cnt[depth[i]]);
+            int cnt = 1;
+            for(auto x:adj[i]) if(depth[x]==depth[i]+1)
+                    cnt++;
+            ans = max(ans, cnt);
         }
-
         cout << ans << "\n";
     }
     return 0;
