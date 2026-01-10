@@ -1,5 +1,5 @@
-// Qs: B_Kevin_and_Geometry
-// Time: 11:00:19
+// Qs: C_Where_is_the_Pizza
+// Time: 00:11:47
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -94,53 +94,108 @@ int msb(int mask)
 #define onbit(mask, bit) ((mask) | (1LL << (bit)))
 #define offbit(mask, bit) ((mask) & ~(1LL << (bit)))
 #define changebit(mask, bit) ((mask) ^ (1LL << bit))
+// --------- DSU by Size Template ----------
+class DSU
+{
+    vector<int> parent, size;
+
+public:
+    DSU(int n)
+    {
+        parent.resize(n);
+        size.resize(n, 1);
+        for (int i = 0; i < n; i++)
+        {
+            parent[i] = i;
+        }
+    }
+
+    int find(int x)
+    {
+        if (parent[x] != x)
+        {
+            parent[x] = find(parent[x]); // Path compression
+        }
+        return parent[x];
+    }
+
+    bool unite(int x, int y)
+    {
+        int px = find(x), py = find(y);
+        if (px == py)
+            return false;
+
+        if (size[px] < size[py])
+            swap(px, py);
+        parent[py] = px;
+        size[px] += size[py];
+        return true;
+    }
+
+    bool connected(int x, int y)
+    {
+        return find(x) == find(y);
+    }
+
+    int getSize(int x)
+    {
+        return size[find(x)];
+    }
+};
+
+long long bin_exp(long long base, long long exp, long long mod = MOD)
+{
+    long long result = 1;
+    while (exp > 0)
+    {
+        if (exp & 1)
+            result = (result * base) % mod;
+        base = (base * base) % mod;
+        exp >>= 1;
+    }
+    return result;
+}
 
 void solve()
 {
     int n;
     cin >> n;
-    vector<int> ans;
-    vin(a, n);
-    sort(all(a));
-    int r = 0;
-    while (r < n)
+
+    vector<int> a(n), b(n), d(n);
+    for (int i = 0; i < n; i++)
+        cin >> a[i];
+    for (int i = 0; i < n; i++)
+        cin >> b[i];
+
+    vector<bool> final(n + 1, false);
+    for (int i = 0; i < n; i++)
     {
-        if (r < n - 1 && a[r] == a[r + 1])
-        {
-            ans.push_back(a[r]);
-            r += 2;
-        }
-        else
-            r++;
+        cin >> d[i];
+        if (d[i] != 0)
+            final[d[i]] = true;
+        if (a[i] == b[i])
+            final[a[i]] = true;
     }
-    // debug(ans);
-    if (ans.size() > 1)
+
+    DSU ds(n + 1);
+    for (int i = 0; i < n; i++)
+        ds.unite(a[i], b[i]);
+
+    unordered_set<int> blocked;
+    for (int i = 1; i <= n; i++)
+        if (final[i])
+            blocked.insert(ds.find(i));
+
+    int cnt = 0;
+    unordered_set<int> seen;
+    for (int i = 1; i <= n; i++)
     {
-        cout << ans[0] << " " << ans[0] << " " << ans[1] << " " << ans[1] << nl;
-        return;
+        int p = ds.find(i);
+        if (!blocked.count(p) && seen.insert(p).second)
+            cnt++;
     }
-    else if (ans.size() == 1)
-    {
-        int e = ans[0];
-        for (int i = 0; i < 2; i++)
-        {
-            auto it = find(a.begin(), a.end(), e);
-            if (it != a.end())
-                a.erase(it);
-        }
-        int r = 0;
-        while (r < a.size())
-        {
-            if (r < a.size() - 1 && 2 * e > a[r + 1] - a[r])
-            {
-                cout << e << " " << e << " " << a[r+1] << " " << a[r] << nl;
-                return;
-            }
-            else
-                r++;
-        }
-    }
-    cout << -1 << nl;
+
+    cout << bin_exp(2, cnt) << '\n';
 }
 
 int32_t main()

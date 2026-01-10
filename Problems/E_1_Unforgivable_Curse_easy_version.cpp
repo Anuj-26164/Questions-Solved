@@ -1,5 +1,5 @@
-// Qs: B_Kevin_and_Geometry
-// Time: 11:00:19
+// Qs: E_1_Unforgivable_Curse_easy_version
+// Time: 11:39:23
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -95,52 +95,85 @@ int msb(int mask)
 #define offbit(mask, bit) ((mask) & ~(1LL << (bit)))
 #define changebit(mask, bit) ((mask) ^ (1LL << bit))
 
+// --------- DSU by Size Template ----------
+class DSU
+{
+    vector<int> parent, size;
+
+public:
+    DSU(int n)
+    {
+        parent.resize(n);
+        size.resize(n, 1);
+        for (int i = 0; i < n; i++)
+        {
+            parent[i] = i;
+        }
+    }
+
+    int find(int x)
+    {
+        if (parent[x] != x)
+        {
+            parent[x] = find(parent[x]); // Path compression
+        }
+        return parent[x];
+    }
+
+    bool unite(int x, int y)
+    {
+        int px = find(x), py = find(y);
+        if (px == py)
+            return false;
+
+        if (size[px] < size[py])
+            swap(px, py);
+        parent[py] = px;
+        size[px] += size[py];
+        return true;
+    }
+
+    bool connected(int x, int y)
+    {
+        return find(x) == find(y);
+    }
+
+    int getSize(int x)
+    {
+        return size[find(x)];
+    }
+};
+
 void solve()
 {
-    int n;
-    cin >> n;
-    vector<int> ans;
-    vin(a, n);
-    sort(all(a));
-    int r = 0;
-    while (r < n)
+    int n, k;
+    cin >> n >> k;
+    string s, t;
+    cin >> s >> t;
+    string x = s, y = t;
+    sort(all(x)), sort(all(y));
+    if (x != y)
     {
-        if (r < n - 1 && a[r] == a[r + 1])
-        {
-            ans.push_back(a[r]);
-            r += 2;
-        }
-        else
-            r++;
-    }
-    // debug(ans);
-    if (ans.size() > 1)
-    {
-        cout << ans[0] << " " << ans[0] << " " << ans[1] << " " << ans[1] << nl;
+        no();
         return;
     }
-    else if (ans.size() == 1)
+    DSU ds(n + 1);
+    for (int i = 1; i + k <= n; i++)
     {
-        int e = ans[0];
-        for (int i = 0; i < 2; i++)
+        ds.unite(i, i + k);
+        if (i + k + 1 <= n)
+            ds.unite(i, i + k + 1);
+    }
+    f(i, 1, n + 1)
+    {
+        if (ds.getSize(i) == 1 && s[i - 1] != t[i - 1])
         {
-            auto it = find(a.begin(), a.end(), e);
-            if (it != a.end())
-                a.erase(it);
-        }
-        int r = 0;
-        while (r < a.size())
-        {
-            if (r < a.size() - 1 && 2 * e > a[r + 1] - a[r])
-            {
-                cout << e << " " << e << " " << a[r+1] << " " << a[r] << nl;
-                return;
-            }
-            else
-                r++;
+            // debug(i);
+            no();
+            return;
         }
     }
-    cout << -1 << nl;
+    yes();
 }
 
 int32_t main()
