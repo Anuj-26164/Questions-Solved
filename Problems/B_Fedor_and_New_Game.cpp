@@ -1,5 +1,5 @@
-// Qs: C_A_Good_Problem
-// Time: 12:32:30
+// Qs: B_Fedor_and_New_Game
+// Time: 09:30:37
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -97,31 +97,17 @@ int msb(int mask)
 
 void solve()
 {
-    int n, l, r, k;
-    cin >> n >> l >> r >> k;
-    if (n & 1)
-        cout << l << nl;
-    else if (n==2)
-        cout << -1 << nl;
-    else
+    int n, m, k;
+    cin >> n >> m >> k;
+    vector<int> s(m + 2);
+    f(i, 1, m + 2) cin >> s[i];
+    int fed = s[m + 1], ans = 0;
+    f(i, 1, m + 1)
     {
-        int ans = l, x = msb(l);
-        for (int bit = 63; bit >= 0; bit--)
-        {
-            if ((l >> bit) & 1ll)
-                ans ^= (1ll << bit);
-        }
-        ans ^= (1ll << (x + 1));
-        if(ans>r)
-            cout << -1 << nl;
-        else 
-        {
-            if(k==n||k==n-1)
-                cout << ans << nl;
-            else
-                cout << l << nl;
-        }
+        if ((__builtin_popcountll(fed ^ s[i])) <= k)
+            ans++;
     }
+    cout << ans << nl;
 }
 
 int32_t main()
@@ -130,7 +116,7 @@ int32_t main()
     cin.tie(nullptr);
     cout.tie(nullptr);
     int t = 1;
-    cin >> t;
+    // cin >> t;
     int tt = 1;
     while (t--)
     {

@@ -1,5 +1,5 @@
-// Qs: C_A_Good_Problem
-// Time: 12:32:30
+// Qs: C_Make_It_Beautiful
+// Time: 18:55:10
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -97,31 +97,33 @@ int msb(int mask)
 
 void solve()
 {
-    int n, l, r, k;
-    cin >> n >> l >> r >> k;
-    if (n & 1)
-        cout << l << nl;
-    else if (n==2)
-        cout << -1 << nl;
-    else
+    int n,k;
+    cin >> n >> k;
+
+    vector<int> v(n);
+    for (int i = 0; i < n; i++)
+        cin >> v[i];
+
+    vector<int> minreq;
+    int ans = 0;
+
+    for (int i = 0; i < n; i++)
     {
-        int ans = l, x = msb(l);
-        for (int bit = 63; bit >= 0; bit--)
+        ans += __builtin_popcountll(v[i]);
+        for (int bit = 0; bit <= 60; bit++)
         {
-            if ((l >> bit) & 1ll)
-                ans ^= (1ll << bit);
-        }
-        ans ^= (1ll << (x + 1));
-        if(ans>r)
-            cout << -1 << nl;
-        else 
-        {
-            if(k==n||k==n-1)
-                cout << ans << nl;
-            else
-                cout << l << nl;
+            if (((v[i] >> bit) & 1LL) == 0)
+                minreq.push_back(1LL << bit);
         }
     }
+    sort(minreq.begin(), minreq.end());
+    int m = minreq.size();
+    vector<int> pfx(m + 1, 0);
+    for (int i = 0; i < m; i++)
+        pfx[i + 1] = pfx[i] + minreq[i];
+    int cnt = upper_bound(pfx.begin(), pfx.end(), k) - pfx.begin() - 1;
+
+    cout << ans + cnt << nl;
 }
 
 int32_t main()

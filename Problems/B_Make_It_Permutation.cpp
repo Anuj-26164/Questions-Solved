@@ -1,5 +1,5 @@
-// Qs: C_A_Good_Problem
-// Time: 12:32:30
+// Qs: B_Make_It_Permutation
+// Time: 19:07:54
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -95,31 +95,24 @@ int msb(int mask)
 #define offbit(mask, bit) ((mask) & ~(1LL << (bit)))
 #define changebit(mask, bit) ((mask) ^ (1LL << bit))
 
+void display(int i, int l, int r)
+{
+    cout << i << " " << l << " " << r << nl;
+}
 void solve()
 {
-    int n, l, r, k;
-    cin >> n >> l >> r >> k;
-    if (n & 1)
-        cout << l << nl;
-    else if (n==2)
-        cout << -1 << nl;
-    else
+    int n;
+    cin >> n;
+    cout << 2 * n - 2 << nl;
+    for (int i = 1; i <= 2 * n - 2; i++)
     {
-        int ans = l, x = msb(l);
-        for (int bit = 63; bit >= 0; bit--)
+        if (i <= n - 1)
         {
-            if ((l >> bit) & 1ll)
-                ans ^= (1ll << bit);
+            display(i + 1, 1, i + 1);
         }
-        ans ^= (1ll << (x + 1));
-        if(ans>r)
-            cout << -1 << nl;
-        else 
+        else
         {
-            if(k==n||k==n-1)
-                cout << ans << nl;
-            else
-                cout << l << nl;
+            display(i - n + 1, i - n + 2, n);
         }
     }
 }

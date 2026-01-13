@@ -1,5 +1,5 @@
-// Qs: C_A_Good_Problem
-// Time: 12:32:30
+// Qs: C_Beautiful_XOR
+// Time: 11:59:22
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -97,30 +97,28 @@ int msb(int mask)
 
 void solve()
 {
-    int n, l, r, k;
-    cin >> n >> l >> r >> k;
-    if (n & 1)
-        cout << l << nl;
-    else if (n==2)
+    int a, b;
+    cin >> a >> b;
+    int x = msb(a), y = msb(b);
+    if (y > x)
+    {
         cout << -1 << nl;
+        return;
+    }
     else
     {
-        int ans = l, x = msb(l);
-        for (int bit = 63; bit >= 0; bit--)
+        vector<int> ops;
+        for (int bit = 0; bit <= 30; bit++)
         {
-            if ((l >> bit) & 1ll)
-                ans ^= (1ll << bit);
-        }
-        ans ^= (1ll << (x + 1));
-        if(ans>r)
-            cout << -1 << nl;
-        else 
-        {
-            if(k==n||k==n-1)
-                cout << ans << nl;
+            x = (a >> bit) & 1ll;
+            y = (b >> bit) & 1ll;
+            if (x == y)
+                continue;
             else
-                cout << l << nl;
+                ops.push_back(1ll << bit);
         }
+        cout << ops.size() << nl;
+        vout(ops, i, 0, ops.size());
     }
 }
 
