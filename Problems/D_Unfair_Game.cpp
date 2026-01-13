@@ -1,5 +1,5 @@
-// Qs: D_Permutation_Game
-// Time: 00:04:22
+// Qs: D_Unfair_Game
+// Time: 23:54:16
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -95,38 +95,33 @@ int msb(int mask)
 #define offbit(mask, bit) ((mask) & ~(1LL << (bit)))
 #define changebit(mask, bit) ((mask) ^ (1LL << bit))
 
+vector<vector<int>>dp(40,vector<int>(40,-1));
+int ncr(int n, int r)
+{
+    if (r > n)
+        return 0;
+    if (r == 0)
+        return 1;
+    if(dp[n][r]!=-1)
+        return dp[n][r];
+    return dp[n][r] = ncr(n - 1, r - 1) + ncr(n - 1, r);
+}
 void solve()
 {
-    int n, k, posa, posb;
-    cin >> n >> k >> posa >> posb;
-    vin(p, n);
-    vin(a, n);
-    int scorea = 0, scoreb = 0, cnt = 0, sum = 0;
-    while (cnt < min(n,k))
+    int n, k;
+    cin >> n >> k;
+    int x = log2(n), ans = 0;
+    for (int maxb = x - 1; maxb >= 0; maxb--) // maxb+cntbit>k
     {
-        scorea = max(scorea, sum + (k - cnt) * a[posa - 1]);
-        sum += a[posa - 1];
-        posa = p[posa - 1];
-        cnt++;
+        for (int cntbit = 1; cntbit <= maxb + 1; cntbit++)
+        {
+            if (maxb + cntbit > k)
+                ans += ncr(maxb, cntbit - 1);
+        }
     }
-    cnt = 0, sum = 0;
-    while (cnt < min(n,k))
-    {
-        scoreb = max(scoreb, sum + (k - cnt) * a[posb - 1]);
-        // debug(cnt);
-        // debug(scoreb);
-        sum += a[posb - 1];
-        posb = p[posb - 1];
-        cnt++;
-    }
-    // debug(scoreb);
-    if (scorea == scoreb)
-        cout
-            << "Draw" << nl;
-    else if (scorea > scoreb)
-        cout << "Bodya" << nl;
-    else
-        cout << "Sasha" << nl;
+    if(x+1>k)
+        ans++;
+    cout << ans << nl;
 }
 
 int32_t main()

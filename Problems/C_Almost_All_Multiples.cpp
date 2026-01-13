@@ -1,5 +1,5 @@
-// Qs: D_Permutation_Game
-// Time: 00:04:22
+// Qs: C_Almost_All_Multiples
+// Time: 10:07:51
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -97,36 +97,26 @@ int msb(int mask)
 
 void solve()
 {
-    int n, k, posa, posb;
-    cin >> n >> k >> posa >> posb;
-    vin(p, n);
-    vin(a, n);
-    int scorea = 0, scoreb = 0, cnt = 0, sum = 0;
-    while (cnt < min(n,k))
+    int n, x;
+    cin >> n >> x;
+    if (n % x)
     {
-        scorea = max(scorea, sum + (k - cnt) * a[posa - 1]);
-        sum += a[posa - 1];
-        posa = p[posa - 1];
-        cnt++;
+        cout << "-1\n";
+        return;
     }
-    cnt = 0, sum = 0;
-    while (cnt < min(n,k))
-    {
-        scoreb = max(scoreb, sum + (k - cnt) * a[posb - 1]);
-        // debug(cnt);
-        // debug(scoreb);
-        sum += a[posb - 1];
-        posb = p[posb - 1];
-        cnt++;
-    }
-    // debug(scoreb);
-    if (scorea == scoreb)
-        cout
-            << "Draw" << nl;
-    else if (scorea > scoreb)
-        cout << "Bodya" << nl;
-    else
-        cout << "Sasha" << nl;
+    vector<int> p(n + 1);
+    iota(p.begin() + 1, p.end(), 1);
+    p[1] = x, p[n] = 1;
+    // debug(p);
+    while (x < n)
+        for (int i = x * 2; i <= n; i += x)
+            if (n % i == 0)
+            {
+                p[x] = i;
+                x = i;
+                break;
+            }
+    vout(p, i, 1, n + 1);
 }
 
 int32_t main()

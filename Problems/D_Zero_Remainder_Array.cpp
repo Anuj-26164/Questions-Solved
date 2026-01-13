@@ -1,5 +1,5 @@
-// Qs: D_Permutation_Game
-// Time: 00:04:22
+// Qs: D_Zero_Remainder_Array
+// Time: 14:18:55
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -97,36 +97,40 @@ int msb(int mask)
 
 void solve()
 {
-    int n, k, posa, posb;
-    cin >> n >> k >> posa >> posb;
-    vin(p, n);
-    vin(a, n);
-    int scorea = 0, scoreb = 0, cnt = 0, sum = 0;
-    while (cnt < min(n,k))
+    int n, k;
+    cin >> n >> k;
+    vector<int> v(n);
+    map<int, int> mp;
+    f(i, 0, n)
     {
-        scorea = max(scorea, sum + (k - cnt) * a[posa - 1]);
-        sum += a[posa - 1];
-        posa = p[posa - 1];
-        cnt++;
+        cin >> v[i];
+        if (v[i] % k == 0)
+            continue;
+        else
+        {
+            v[i] = (k - (v[i] % k));
+            mp[v[i]]++;
+        }
     }
-    cnt = 0, sum = 0;
-    while (cnt < min(n,k))
+    // debug(mp);
+    sort(all(v));
+    int maxf = 1, el = -1;
+    for (auto it = mp.begin(); it != mp.end(); it++)
     {
-        scoreb = max(scoreb, sum + (k - cnt) * a[posb - 1]);
-        // debug(cnt);
-        // debug(scoreb);
-        sum += a[posb - 1];
-        posb = p[posb - 1];
-        cnt++;
+        if (it->first == 0)
+            continue;
+        else
+        {
+            int x = it->first, cnt = it->second;
+            if (cnt >= maxf)
+            {
+                maxf = cnt, el = x;
+            }
+        }
     }
-    // debug(scoreb);
-    if (scorea == scoreb)
-        cout
-            << "Draw" << nl;
-    else if (scorea > scoreb)
-        cout << "Bodya" << nl;
-    else
-        cout << "Sasha" << nl;
+    // debug(maxf);
+    // debug(el);
+    cout << el + (maxf - 1) * k + 1 << nl;
 }
 
 int32_t main()
