@@ -1,5 +1,5 @@
-// Qs: E_Do_You_Love_Your_Hero_and_His_Two_Hit_Multi_Target_Attacks
-// Time: 23:05:40
+// Qs: C_Two_Movies
+// Time: 14:10:40
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -95,35 +95,47 @@ int msb(int mask)
 #define offbit(mask, bit) ((mask) & ~(1LL << (bit)))
 #define changebit(mask, bit) ((mask) ^ (1LL << bit))
 
+
 void solve()
 {
-    int k;
-    cin >> k;
-    if (k == 0)
+    int n;
+    cin >> n;
+    vin(a, n);
+    vin(b, n);
+    int sa = 0, sb = 0;
+    vector<pair<int, int>> eq;
+    f(i, 0, n) if (a[i] == b[i]) eq.push_back({a[i], b[i]});
+    f(i, 0, n)
     {
-        cout << 0 << nl;
-        return;
-    }
-    else
-    {
-        int nump = (int)((1 + sqrtl(1 + 8 * k)) / 2);
-        int done = nump * (nump - 1) / 2, rem = k - done;
-        int totalpts = nump + rem;
-        int x = 0, y = 0;
-        cout << totalpts << nl;
-        while (nump--)
+        if (a[i] > b[i])
         {
-            cout << x << " " << y << nl;
-            x++;
+            sa += a[i];
         }
-        x = 0, y = 1;
-        while (rem)
+        else if (a[i] < b[i])
         {
-            cout << x << " " << y << nl;
-            x += 1, y += 1;
-            rem -= 1;
+            sb += b[i];
         }
     }
+    for(auto [ai,bi]:eq)
+    {
+        if (ai == 1)
+        {
+            if (sa >= sb)
+                sb++;
+            else
+                sa++;
+        }
+        else if (ai == 0)
+            continue;
+        else
+        {
+            if (sa >= sb)
+                sa--;
+            else
+                sb--;
+        }
+    }
+    cout << min(sa, sb) << nl;
 }
 
 int32_t main()
@@ -136,7 +148,7 @@ int32_t main()
     int tt = 1;
     while (t--)
     {
-        // cerr << "Case #" << tt << ": "<<nl
+        // cerr << "Case #" << tt << ": ";<<nl
         solve();
         tt++;
     }

@@ -1,5 +1,5 @@
-// Qs: E_Do_You_Love_Your_Hero_and_His_Two_Hit_Multi_Target_Attacks
-// Time: 23:05:40
+// Qs: D_Satyam_and_Counting
+// Time: 22:13:07
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -97,33 +97,44 @@ int msb(int mask)
 
 void solve()
 {
-    int k;
-    cin >> k;
-    if (k == 0)
+    int n;
+    cin >> n;
+    vector<int> y0, y1;
+    vector<pair<int, int>> pts;
+    map<int, int> mpy1, mpy0;
+    f(i, 0, n)
     {
-        cout << 0 << nl;
-        return;
-    }
-    else
-    {
-        int nump = (int)((1 + sqrtl(1 + 8 * k)) / 2);
-        int done = nump * (nump - 1) / 2, rem = k - done;
-        int totalpts = nump + rem;
-        int x = 0, y = 0;
-        cout << totalpts << nl;
-        while (nump--)
+        int x, y;
+        cin >> x >> y;
+        pts.emplace_back(x, y);
+        if (y == 1)
         {
-            cout << x << " " << y << nl;
-            x++;
+            y1.push_back(x);
+            mpy1[x]++;
         }
-        x = 0, y = 1;
-        while (rem)
+        else
         {
-            cout << x << " " << y << nl;
-            x += 1, y += 1;
-            rem -= 1;
+            y0.push_back(x);
+            mpy0[x]++;
         }
     }
+    int a = y0.size(), b = y1.size(), ans = 0;
+    f(i, 0, a)
+    {
+        if (mpy1[y0[i]] > 0)
+            ans += (b + a - 2);
+    }
+    f(i,0,b)
+    {
+        if(mpy0[y1[i]-1]>0 && mpy0[y1[i]+1]>0)
+            ans++;
+    }
+    f(i,0,a)
+    {
+        if (mpy1[y0[i] - 1] > 0 && mpy1[y0[i] + 1] > 0)
+            ans++;
+    }
+    cout << ans << nl;
 }
 
 int32_t main()
@@ -136,7 +147,7 @@ int32_t main()
     int tt = 1;
     while (t--)
     {
-        // cerr << "Case #" << tt << ": "<<nl
+        // cerr << "Case #" << tt << ": " <<nl
         solve();
         tt++;
     }

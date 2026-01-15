@@ -95,7 +95,7 @@ int msb(int mask)
 #define offbit(mask, bit) ((mask) & ~(1LL << (bit)))
 #define changebit(mask, bit) ((mask) ^ (1LL << bit))
 
-int spf[200010];
+int spf[200020];
 void build_spf()
 {
     for (int i = 1; i <= 200010; i++)
@@ -120,13 +120,21 @@ void solve()
     int n;
     cin >> n;
     vector<pair<int, int>> vp(n);
-    f(i, 0, n) cin >> vp[i].ff;
-    f(i, 0, n) cin >> vp[i].ss;
-    vector<int> cnt(200010, 0);
-    f(i, 0, n)
+    for (int i = 0; i < n; i++)
+        cin >> vp[i].first;
+    for (int i = 0; i < n; i++)
+        cin >> vp[i].second;
+
+    // sort by cost
+    sort(vp.begin(), vp.end(), [](auto &x, auto &y)
+         { return x.second < y.second; });
+
+    // conflict check
+    set<int> cnt;
+    for (int i = 0; i < n; i++)
     {
         set<int> s;
-        int x = vp[i].ff;
+        int x = vp[i].first;
         while (x > 1)
         {
             s.insert(spf[x]);
@@ -134,46 +142,60 @@ void solve()
         }
         for (auto p : s)
         {
-            if (cnt[p] > 0)
+            if (cnt.count(p))
             {
                 cout << 0 << nl;
                 return;
             }
-            cnt[p]++;
+            cnt.insert(p);
         }
     }
-    sort(all(vp), [](pair<int, int> &a, pair<int, int> &b)
-         { return a.ss <= b.ss; });
-    if (cnt[2])
+
+    // CASE 1: ≤ 1 operation
+    long long mincost = vp[0].second + vp[1].second;
+
+    // one operation
+    for (int i = 0; i < n; i++)
     {
-        if (vp[0].ff % 2 == 0)
-            cout << vp[1].ss << nl;
-        else
-            cout << vp[0].ss << nl;
+        int x = vp[i].first + 1;
+        set<int> s;
+        while (x > 1)
+        {
+            s.insert(spf[x]);
+            x /= spf[x];
+        }
+        for (auto p : s)
+        {
+            if (cnt.count(p))
+            {
+                mincost = min(mincost, (long long)vp[i].second);
+                break;
+            }
+        }
     }
-    else
+
+    // CASE 2: multi-operations only on cheapest
+    int a1 = vp[0].first;
+    long long b1 = vp[0].second;
+
+    set<int> other_primes;
+    for (int i = 1; i < n; i++)
     {
-        // f(i, 0, n)
-        // {
-        //     int x = vp[i].ff + 1;
-        //     set<int> t;
-        //     while (x > 1)
-        //     {
-        //         t.insert(spf[x]);
-        //         x /= spf[x];
-        //     }
-        //     for (auto p : t)
-        //     {
-        //         if (cnt[p] > 0)
-        //         {
-        //             cout << 1 << nl;
-        //             return;
-        //         }
-        //     }
-        // }
-        // cout << 2 << nl;
-        cout << -1 << nl;
+        int x = vp[i].first;
+        while (x > 1)
+        {
+            other_primes.insert(spf[x]);
+            x /= spf[x];
+        }
     }
+
+    for (auto p : other_primes)
+    {
+        int need = (p - a1 % p) % p;
+        mincost = min(mincost, (long long)need * b1);
+    }
+
+    cout << mincost << nl;
 }
 
 int32_t main()
