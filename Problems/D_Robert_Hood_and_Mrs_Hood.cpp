@@ -1,5 +1,5 @@
-// Qs: E_Do_You_Love_Your_Hero_and_His_Two_Hit_Multi_Target_Attacks
-// Time: 23:05:40
+// Qs: D_Robert_Hood_and_Mrs_Hood
+// Time: 20:20:20
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -95,52 +95,34 @@ int msb(int mask)
 #define offbit(mask, bit) ((mask) & ~(1LL << (bit)))
 #define changebit(mask, bit) ((mask) ^ (1LL << bit))
 
-int nc2(int n)
-{
-    if (n < 0)
-        return 0;
-    return n * (n - 1) / 2;
-}
 void solve()
 {
-    int k;
-    cin >> k;
-    if (k == 0)
+    int n, d, k;
+    cin >> n >> d >> k;
+    vector<int> diff(n + 1);
+    f(i, 0, k)
     {
-        cout << 0 << nl;
-        return;
+        int x, y;
+        cin >> x >> y;
+        --x, --y;
+        int L = max(0ll, x - d + 1);
+        int R = min(y, n - d);
+        diff[L]++;
+        diff[R + 1]--;
     }
-    else
+    int curr = 0, minpos = -1, maxpos = -1, mn = LLONG_MAX, mx = LLONG_MIN;
+    for (int winStart = 0; winStart < n - d + 1; winStart++)
     {
-        int nump = ((1 + sqrt(1 + 8 * k)) / 2);
-        int done = nc2(nump);
-        int nump1 = 0;
-        if (k - done > 0)
-            nump1 = ((1 + sqrtl(1 + 8 * (k - done))) / 2);
-        int rem = k - nc2(nump) - nc2(nump1);
-        int totalpts = nump + nump1 + (rem + 1) / 2;
-        int x = 0, y = 0;
-        cout << totalpts << nl;
-        f(i, 0, nump)
+        curr += diff[winStart];
+        if (curr > mx)
+            mx = curr, maxpos = winStart + 1;
+        if (curr < mn)
         {
-            cout << x << " " << y << nl;
-            x++;
+            mn = curr;
+            minpos = winStart + 1;
         }
-        x = -1, y = 1;
-        f(i, 0, nump1)
-        {
-            cout << x << " " << y << nl;
-            y++;
-        }
-        x = 0, y = 1;
-        for (int t = rem; t >= 2; t -= 2)
-        {
-            cout << x << " " << y << nl;
-            x += 1, y += 1;
-        }
-        if (rem & 1)
-            cout << x << " " << -1 << nl;
     }
+    cout << maxpos << " " << minpos << nl;
 }
 
 int32_t main()
@@ -153,7 +135,7 @@ int32_t main()
     int tt = 1;
     while (t--)
     {
-        // cerr << "Case #" << tt << ": " << nl;
+        // cerr << "Case #" << tt << ": "<<nl;
         solve();
         tt++;
     }
