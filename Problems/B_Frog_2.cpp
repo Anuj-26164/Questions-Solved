@@ -1,5 +1,5 @@
-// Qs: A_Frog_2
-// Time: 18:38:29
+// Qs: A_Frog_1
+// Time: 15:16:00
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -7,116 +7,69 @@ using namespace std;
 #define vl vector<long long>
 #define all(x) begin(x), end(x)
 #define pb push_back
-#define ll long long int
-#define f(k, n) for (int i = k; i < n; i++)
-#define nl '\n'
+#define int long long
+#define ll long long
+#define f(i, k, n) for (int i = k; i < n; i++)
+#define nl endl
 #define vin(v, n)               \
     vl v(n);                    \
     for (int i = 0; i < n; i++) \
     {                           \
         cin >> v[i];            \
     }
-#define vout(v, n)                  \
+#define vout(v, i, k, n)            \
     do                              \
     {                               \
-        for (int i = 0; i < n; i++) \
+        for (int i = k; i < n; i++) \
             cout << v[i] << " ";    \
         cout << "\n";               \
     } while (0)
 #define ff first
 #define ss second
+#define MOD 1000000007LL
+const ll INF = 4e18;
+template <class T, class Container = vector<T>>
+using maxheap = priority_queue<T, Container, less<T>>;
+template <class T, class Container = vector<T>>
+using minheap = priority_queue<T, Container, greater<T>>;
+#define DP1(v, n) vector<long long> v((n) + 1, -1)
+#define DP2(v, n, m) vector<vector<long long>> v((n) + 1, vector<long long>((m) + 1, -1))
 #define pll pair<long long, long long>
-// --------- Priority Queue Templates ----------
-template <typename T>
-using max_heap = priority_queue<T>;
+#define debug(x) cerr << #x << " = " << x << nl;
 
 template <typename T>
-using min_heap = priority_queue<T, vector<T>, greater<T>>;
-
-//--------- Grid movement (4-dir) ----------
-int dx[4] = {1, -1, 0, 0};
-int dy[4] = {0, 0, 1, -1};
-
-long long bin_exp(long long base, long long exp, long long mod)
+ostream &operator<<(ostream &os, const vector<T> &v)
 {
-    long long result = 1;
-    while (exp > 0)
-    {
-        if (exp & 1)
-            result = (result * base) % mod;
-        base = (base * base) % mod;
-        exp >>= 1;
-    }
-    return result;
+    os << "[";
+    for (size_t i = 0; i < v.size(); i++)
+        os << (i ? ", " : "") << v[i];
+    return os << "]";
 }
 
-// --------- DSU by Size Template ----------
-class DSU
+template <typename T, typename U>
+ostream &operator<<(ostream &os, const pair<T, U> &p)
 {
-    vector<int> parent, size;
-
-public:
-    DSU(int n)
-    {
-        parent.resize(n);
-        size.resize(n, 1);
-        for (int i = 0; i < n; i++)
-        {
-            parent[i] = i;
-        }
-    }
-
-    int find(int x)
-    {
-        if (parent[x] != x)
-        {
-            parent[x] = find(parent[x]); // Path compression
-        }
-        return parent[x];
-    }
-
-    bool unite(int x, int y)
-    {
-        int px = find(x), py = find(y);
-        if (px == py)
-            return false;
-
-        if (size[px] < size[py])
-            swap(px, py);
-        parent[py] = px;
-        size[px] += size[py];
-        return true;
-    }
-
-    bool connected(int x, int y)
-    {
-        return find(x) == find(y);
-    }
-
-    int getSize(int x)
-    {
-        return size[find(x)];
-    }
-};
-
-bool isprime(int n)
-{
-    if (n <= 1)
-        return false;
-    if (n <= 3)
-        return true;
-    if (n % 2 == 0 || n % 3 == 0)
-        return false;
-    for (int i = 5; i * i <= n; i += 6)
-    {
-        if (n % i == 0 || n % (i + 2) == 0)
-            return false;
-    }
-    return true;
+    return os << "(" << p.first << ", " << p.second << ")";
 }
-bool isValid(int x, int y, int n, int m, vector<vector<int>> &vis)
+
+template <typename T>
+ostream &operator<<(ostream &os, const set<T> &s)
 {
-    return (x >= 0 && x < n && y >= 0 && y < m && !vis[x][y]);
+    os << "{";
+    bool f = true;
+    for (auto &x : s)
+        os << (f ? "" : ", ") << x, f = false;
+    return os << "}";
+}
+
+template <typename T, typename U>
+ostream &operator<<(ostream &os, const map<T, U> &m)
+{
+    os << "{";
+    bool f = true;
+    for (auto &x : m)
+        os << (f ? "" : ", ") << x, f = false;
+    return os << "}";
 }
 
 void yes()
@@ -129,40 +82,42 @@ void no()
     cout << "NO" << endl;
 }
 
-#define msb(mask) (63 - __builtin_clzll(mask)) /// 0 -> -1
-#define lsb(mask) __builtin_ctzll(mask)        /// 0 -> 64
+int msb(int mask)
+{
+    if (mask == 0)
+        return -1;
+    return 63 - __builtin_clzll(mask);
+}
+#define lsb(mask) __builtin_ctzll(mask)
 #define cntsetbit(mask) __builtin_popcountll(mask)
 #define checkbit(mask, bit) ((mask >> bit) & 1ll)
 #define onbit(mask, bit) ((mask) | (1LL << (bit)))
 #define offbit(mask, bit) ((mask) & ~(1LL << (bit)))
 #define changebit(mask, bit) ((mask) ^ (1LL << bit))
-
 void solve()
 {
-    ll n, k;
+    int n, k;
     cin >> n >> k;
-    vin(v, n);
-    vector<int> dp(n + 1, 0);
+    vin(cost, n);
+    vector<int> dp(n + 1, INF);
     dp[0] = 0;
-    for (int i = 1; i < n; i++)
+    f(i, 1 , n)
     {
-        vector<int> arr;
-        for (int j = 1; j <= k && (i-j)>=0; j++)
-        {
-            arr.push_back(dp[i - j] + abs(v[i] - v[i - j]));
-        }
-        // vout(arr, arr.size());
-        dp[i] = *min_element(arr.begin(), arr.end());
+        f(j, 1, k + 1) if (i - j >= 0) dp[i] = min(dp[i], dp[i - j] + abs(cost[i - j] - cost[i]));
     }
-    // vout(dp, n);
-    cout << dp[n - 1] << nl;
+    cout << dp[n - 1];
 }
-int main()
+
+int32_t main()
 {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+    int t = 1;
+    // cin >> t;
+    f(tt, 1, t + 1)
     {
+        // cerr << "Case #" << tt << ": "<<nl;
         solve();
     }
     return 0;

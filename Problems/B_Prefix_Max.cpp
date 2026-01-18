@@ -1,5 +1,5 @@
-// Qs: A_Frog_1
-// Time: 15:16:00
+// Qs: B_Prefix_Max
+// Time: 20:07:15
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -17,7 +17,7 @@ using namespace std;
     {                           \
         cin >> v[i];            \
     }
-#define vout(v, i, k, n)            \
+#define vout(v, k, n)               \
     do                              \
     {                               \
         for (int i = k; i < n; i++) \
@@ -94,18 +94,40 @@ int msb(int mask)
 #define onbit(mask, bit) ((mask) | (1LL << (bit)))
 #define offbit(mask, bit) ((mask) & ~(1LL << (bit)))
 #define changebit(mask, bit) ((mask) ^ (1LL << bit))
+
 void solve()
 {
     int n;
     cin >> n;
-    vin(cost, n);
-    vector<int> dp(n + 1, 0);
-    dp[1] = dp[0] + abs(cost[0] - cost[1]);
-    f(i,2,n)
+    vector<int> a(n);
+    for (int i = 0; i < n; i++)
     {
-        dp[i] = min(dp[i - 1] + abs(cost[i - 1] - cost[i]), dp[i - 2] + abs(cost[i - 2] - cost[i]));
+        cin >> a[i];
     }
-    cout << dp[n - 1];
+    auto value = [&](const vector<int> &a) -> int
+    {
+        int res = 0, mx = 0;
+        for (int x : a)
+        {
+            mx = max(mx, x);
+            res += mx;
+        }
+        return res;
+    };
+
+    int ans = value(a);
+
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = i + 1; j < n; j++)
+        {
+            swap(a[i], a[j]);
+            ans = max(ans, value(a));
+            swap(a[i], a[j]);
+        }
+    }
+
+    cout << ans << nl;
 }
 
 int32_t main()
@@ -114,7 +136,7 @@ int32_t main()
     cin.tie(nullptr);
     cout.tie(nullptr);
     int t = 1;
-    // cin >> t;
+    cin >> t;
     f(tt, 1, t + 1)
     {
         // cerr << "Case #" << tt << ": "<<nl;

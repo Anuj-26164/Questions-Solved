@@ -1,5 +1,5 @@
-// Qs: A_Frog_1
-// Time: 15:16:00
+// Qs: E_The_Robotic_Rush
+// Time: 21:04:50
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -17,7 +17,7 @@ using namespace std;
     {                           \
         cin >> v[i];            \
     }
-#define vout(v, i, k, n)            \
+#define vout(v, k, n)               \
     do                              \
     {                               \
         for (int i = k; i < n; i++) \
@@ -94,18 +94,92 @@ int msb(int mask)
 #define onbit(mask, bit) ((mask) | (1LL << (bit)))
 #define offbit(mask, bit) ((mask) & ~(1LL << (bit)))
 #define changebit(mask, bit) ((mask) ^ (1LL << bit))
+
+int findLeftTime(vector<int> &maxl, int dL)
+{
+    int l = 0, r = (int)maxl.size() - 1, ans = maxl.size();
+    while (l <= r)
+    {
+        int mid = (l + r) / 2;
+        if (maxl[mid] <= -dL)
+        {
+            ans = mid;
+            r = mid - 1;
+        }
+        else
+            l = mid + 1;
+    }
+    return ans;
+}
+
 void solve()
 {
-    int n;
-    cin >> n;
-    vin(cost, n);
-    vector<int> dp(n + 1, 0);
-    dp[1] = dp[0] + abs(cost[0] - cost[1]);
-    f(i,2,n)
+    int n, m, k;
+    cin >> n >> m >> k;
+
+    vector<int> a(n), b(m);
+    for (int &x : a)
+        cin >> x;
+    for (int &x : b)
+        cin >> x;
+
+    sort(a.begin(), a.end());
+    sort(b.begin(), b.end());
+
+    string s;
+    cin >> s;
+
+    vector<int> maxl(k), maxr(k);
+
+    int netmove = 0, mn = 0, mx = 0;
+    for (int i = 0; i < k; i++)
     {
-        dp[i] = min(dp[i - 1] + abs(cost[i - 1] - cost[i]), dp[i - 2] + abs(cost[i - 2] - cost[i]));
+        if (s[i] == 'R')
+            netmove++;
+        else
+            netmove--;
+
+        mn = min(mn, netmove);
+        mx = max(mx, netmove);
+
+        maxl[i] = mn;
+        maxr[i] = mx;
     }
-    cout << dp[n - 1];
+
+    vector<int> diff(k + 1, 0);
+
+    for (int i = 0; i < n; i++)
+    {
+        int death = k;
+
+        // left me sabse paas
+        int L = lower_bound(b.begin(), b.end(), a[i]) - b.begin() - 1;
+        if (L >= 0)
+        {
+            int dL = a[i] - b[L];
+            death = min(death, findLeftTime(maxl, dL));
+        }
+
+        //right me sabse paas
+        int R = upper_bound(b.begin(), b.end(), a[i]) - b.begin();
+        if (R < m)
+        {
+            int dR = b[R] - a[i];
+            int tR = lower_bound(maxr.begin(), maxr.end(), dR) - maxr.begin();
+            death = min(death, tR);
+        }
+
+        if (death < k)
+            diff[death]--;
+    }
+    // debug(maxl);
+    int alive = n;
+    for (int i = 0; i < k; i++)
+    {
+        alive += diff[i];
+        cout << alive << " ";
+    }
+    cout << nl;
 }
 
 int32_t main()
@@ -114,7 +188,7 @@ int32_t main()
     cin.tie(nullptr);
     cout.tie(nullptr);
     int t = 1;
-    // cin >> t;
+    cin >> t;
     f(tt, 1, t + 1)
     {
         // cerr << "Case #" << tt << ": "<<nl;

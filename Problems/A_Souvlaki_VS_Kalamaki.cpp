@@ -1,5 +1,5 @@
-// Qs: A_Frog_1
-// Time: 15:16:00
+// Qs: A_Souvlaki_VS_Kalamaki
+// Time: 19:02:25
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -94,18 +94,26 @@ int msb(int mask)
 #define onbit(mask, bit) ((mask) | (1LL << (bit)))
 #define offbit(mask, bit) ((mask) & ~(1LL << (bit)))
 #define changebit(mask, bit) ((mask) ^ (1LL << bit))
+
 void solve()
 {
     int n;
     cin >> n;
-    vin(cost, n);
-    vector<int> dp(n + 1, 0);
-    dp[1] = dp[0] + abs(cost[0] - cost[1]);
-    f(i,2,n)
+    vin(a, n);
+    sort(all(a));
+    bool poss = true;
+    for (int i = 1; i < n; i += 2)
     {
-        dp[i] = min(dp[i - 1] + abs(cost[i - 1] - cost[i]), dp[i - 2] + abs(cost[i - 2] - cost[i]));
+        if (i + 1 < n && a[i] != a[i + 1])
+        {
+            poss = false;
+            break;
+        }
     }
-    cout << dp[n - 1];
+    if (poss)
+        yes();
+    else
+        no();
 }
 
 int32_t main()
@@ -114,11 +122,13 @@ int32_t main()
     cin.tie(nullptr);
     cout.tie(nullptr);
     int t = 1;
-    // cin >> t;
-    f(tt, 1, t + 1)
+    cin >> t;
+    int tt = 1;
+    while (t--)
     {
         // cerr << "Case #" << tt << ": "<<nl;
         solve();
+        tt++;
     }
     return 0;
 }

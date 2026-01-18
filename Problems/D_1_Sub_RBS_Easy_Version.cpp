@@ -1,5 +1,5 @@
-// Qs: A_Frog_1
-// Time: 15:16:00
+// Qs: D_1_Sub_RBS_Easy_Version
+// Time: 21:21:41
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -94,18 +94,32 @@ int msb(int mask)
 #define onbit(mask, bit) ((mask) | (1LL << (bit)))
 #define offbit(mask, bit) ((mask) & ~(1LL << (bit)))
 #define changebit(mask, bit) ((mask) ^ (1LL << bit))
+
 void solve()
 {
     int n;
     cin >> n;
-    vin(cost, n);
-    vector<int> dp(n + 1, 0);
-    dp[1] = dp[0] + abs(cost[0] - cost[1]);
-    f(i,2,n)
+    string s;
+    cin >> s;
+
+    vector<int> suffix(n + 10, 0);
+    for (int i = n; i >= 1; i--)
     {
-        dp[i] = min(dp[i - 1] + abs(cost[i - 1] - cost[i]), dp[i - 2] + abs(cost[i - 2] - cost[i]));
+        suffix[i] = suffix[i + 1] + (s[i - 1] == '(');
     }
-    cout << dp[n - 1];
+    bool poss = false;
+    for (int i = 1; i < n && poss == false; i++)
+    {
+        if (s[i - 1] == ')' && s[i] == '(' && suffix[i + 2] > 0)
+        {
+            poss = true;
+        }
+    }
+    // debug(suffix);
+    if(poss)
+        cout << n - 2 << nl;
+    else
+        cout << -1 << nl;
 }
 
 int32_t main()
@@ -114,11 +128,13 @@ int32_t main()
     cin.tie(nullptr);
     cout.tie(nullptr);
     int t = 1;
-    // cin >> t;
-    f(tt, 1, t + 1)
+    cin >> t;
+    int tt = 1;
+    while (t--)
     {
         // cerr << "Case #" << tt << ": "<<nl;
         solve();
+        tt++;
     }
     return 0;
 }

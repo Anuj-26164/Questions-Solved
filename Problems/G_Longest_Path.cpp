@@ -1,5 +1,5 @@
-// Qs: A_Frog_1
-// Time: 15:16:00
+// Qs: G_Longest_Path
+// Time: 18:13:15
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -94,18 +94,41 @@ int msb(int mask)
 #define onbit(mask, bit) ((mask) | (1LL << (bit)))
 #define offbit(mask, bit) ((mask) & ~(1LL << (bit)))
 #define changebit(mask, bit) ((mask) ^ (1LL << bit))
+
+int dfs(int node, const vector<vector<int>> &adj, vector<int> &dp)
+{
+    if (dp[node] != -1)
+        return dp[node];
+
+    int best = 0;
+    for (int neighbor : adj[node])
+    {
+        best = max(best, 1 + dfs(neighbor, adj, dp));
+    }
+
+    return dp[node] = best;
+}
+
 void solve()
 {
-    int n;
-    cin >> n;
-    vin(cost, n);
-    vector<int> dp(n + 1, 0);
-    dp[1] = dp[0] + abs(cost[0] - cost[1]);
-    f(i,2,n)
+    int n, m;
+    cin >> n >> m;
+    vector<vector<int>> adj(n + 1);
+    for (int i = 0; i < m; i++)
     {
-        dp[i] = min(dp[i - 1] + abs(cost[i - 1] - cost[i]), dp[i - 2] + abs(cost[i - 2] - cost[i]));
+        int u, v;
+        cin >> u >> v;
+        u--, v--;
+        adj[u].push_back(v);
     }
-    cout << dp[n - 1];
+    vector<int> dp(n, -1); // dp[i] will store longest path length starting from index i
+    f(i, 0, n)
+    {
+        if(dp[i]==-1)
+        dfs(i, adj, dp);
+    }
+    // debug(dp);
+    cout << *max_element(all(dp));
 }
 
 int32_t main()

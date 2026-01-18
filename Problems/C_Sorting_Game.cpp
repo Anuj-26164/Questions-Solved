@@ -1,5 +1,5 @@
-// Qs: A_Frog_1
-// Time: 15:16:00
+// Qs: C_Sorting_Game
+// Time: 20:59:30
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -94,18 +94,39 @@ int msb(int mask)
 #define onbit(mask, bit) ((mask) | (1LL << (bit)))
 #define offbit(mask, bit) ((mask) & ~(1LL << (bit)))
 #define changebit(mask, bit) ((mask) ^ (1LL << bit))
+
 void solve()
 {
     int n;
     cin >> n;
-    vin(cost, n);
-    vector<int> dp(n + 1, 0);
-    dp[1] = dp[0] + abs(cost[0] - cost[1]);
-    f(i,2,n)
+    string s;
+    cin >> s;
+    string t = s;
+    sort(all(t));
+    if (t == s)
     {
-        dp[i] = min(dp[i - 1] + abs(cost[i - 1] - cost[i]), dp[i - 2] + abs(cost[i - 2] - cost[i]));
+        cout << "Bob" << nl;
+        return;
     }
-    cout << dp[n - 1];
+    else
+    {
+        vector<int> pos;
+        for (int i = n - 1; i >= 0; i--)
+        {
+            if (t[i] == '1' && s[i] != t[i])
+                pos.emplace_back(i);
+            else if(t[i]=='0'&&s[i]=='1')
+                pos.emplace_back(i);
+        }
+        sort(all(pos));
+        cout << "Alice" << nl;
+        cout << pos.size() << nl;
+        for (auto x : pos)
+        {
+            cout << x+1 << " ";
+        }
+        cout << nl;
+    }
 }
 
 int32_t main()
@@ -114,11 +135,13 @@ int32_t main()
     cin.tie(nullptr);
     cout.tie(nullptr);
     int t = 1;
-    // cin >> t;
-    f(tt, 1, t + 1)
+    cin >> t;
+    int tt = 1;
+    while (t--)
     {
         // cerr << "Case #" << tt << ": "<<nl;
         solve();
+        tt++;
     }
     return 0;
 }
