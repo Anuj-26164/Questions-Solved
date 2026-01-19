@@ -1,5 +1,5 @@
-// Qs: H_Grid_1
-// Time: 14:36:27
+// Qs: J_Sushi
+// Time: 18:16:04
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -33,7 +33,7 @@ using maxheap = priority_queue<T, Container, less<T>>;
 template <class T, class Container = vector<T>>
 using minheap = priority_queue<T, Container, greater<T>>;
 #define DP1(v, n) vector<long long> v((n) + 1, -1)
-#define DP2(v, n, m) vector<vector<long long>> v((n) + 1, vector<long long>((m) + 1, 0))
+#define DP2(v, n, m) vector<vector<long long>> v((n) + 1, vector<long long>((m) + 1, -1))
 #define pll pair<long long, long long>
 #define debug(x) cerr << #x << " = " << x << nl;
 
@@ -95,40 +95,46 @@ int msb(int mask)
 #define offbit(mask, bit) ((mask) & ~(1LL << (bit)))
 #define changebit(mask, bit) ((mask) ^ (1LL << bit))
 
-int n, m;
-vector<string> grid;
-bool isvalid(int x, int y)
-{
-    return (x >= 0 && x < n && y >= 0 && y < m && grid[x][y] != '#');
-}
+double dp[302][302][302];
 void solve()
 {
-    cin >> n >> m;
-    grid.resize(n);
+    int n;
+    cin >> n;
+    vin(v, n);
+    // dp[x1][x2][x3] will store expected number of moves to eat x1 plates with 1 sushi, x2 with 2 ,x3 with 3
+    //  therefore final answer will be dp[p1][p2][p3] where p1=number of plates with 1 sushi and so on,
+    int p1 = 0, p2 = 0, p3 = 0;
     f(i, 0, n)
     {
-        string s;
-        cin >> s;
-        grid[i] = s;
+        if (v[i] == 1)
+            p1++;
+        else if (v[i] == 2)
+            p2++;
+        else
+            p3++;
     }
-    // dp[i][j] will store number of ways to reach (i,j) from (0,0)
-    // therefore base case dp[0][0] = 1
-    // and final answer is dp[n-1][m-1]
-    DP2(dp, n, m);
-    dp[0][0] = 1;
-    f(i, 0, n)
+    memset(dp, 0, sizeof(dp));
+    dp[0][0][0] = 0; // base case
+    // dp transition -> dp[x1][x2][x3] = ((x1/(x1+x2+x3))*(dp[x1-1][x2][x3])) + ((x2/(x1+x2+x3))*dp[x1+1][x2-1][x3]) +((x3/(x1+x2+x3))*dp[x1][x2+1][x3-1])
+
+    for (int k = 0; k <= n; k++)
     {
-        f(j, 0, m)
+        for (int j = 0; j <= n; j++)
         {
-            if (i == 0 && j == 0)
-                dp[i][j] = 1;
-            else if (isvalid(i, j))
-                dp[i][j] = ((isvalid(i, j - 1) ? dp[i][j - 1] : 0) + (isvalid(i - 1, j) ? dp[i - 1][j] : 0)) % MOD;
-            else
-                dp[i][j] = 0;
+            for (int i = 0; i <= n; i++)
+            {
+                if (i >= 1)
+                    dp[i][j][k] += (1.0 * i / (i + j + k)) * (dp[i - 1][j][k]);
+                if (j >= 1)
+                    dp[i][j][k] += (1.0 * j / (i + j + k)) * (dp[i + 1][j - 1][k]);
+                if (k >= 1)
+                    dp[i][j][k] += (1.0 * k / (i + j + k)) * (dp[i][j + 1][k - 1]);
+                if (!(i == 0 && j == 0 && k == 0))
+                    dp[i][j][k] += (1.0 * n / (i + j + k));
+            }
         }
     }
-    cout << dp[n - 1][m - 1];
+    cout << fixed << setprecision(10) << dp[p1][p2][p3] << nl;
 }
 
 int32_t main()

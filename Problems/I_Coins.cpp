@@ -206,6 +206,7 @@ void solve()
     int n;
     cin >> n;
     vector<vector<double>> dp(n + 1, vector<double>(n + 1, 0));
+    // dp[i][h] = probability of getting exactly h heads after tossing i coins
     double ph[n + 1];
     f(1, n + 1) cin >> ph[i];
     dp[1][0] = 1 - ph[1];

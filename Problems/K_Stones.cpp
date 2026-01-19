@@ -1,5 +1,5 @@
-// Qs: C_Number_of_Minimums_on_a_Segment
-// Time: 14:35:43
+// Qs: K_Stones
+// Time: 20:57:02
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -75,6 +75,9 @@ int msb(int mask) {
 #define changebit(mask,bit) ((mask)^(1LL<<bit))
 
 void solve() {
+    int n, k;
+    cin >> n >> k;
+    vin(v, n);
     
 }
 
@@ -83,7 +86,7 @@ int32_t main() {
     cin.tie(nullptr);
     cout.tie(nullptr);
     int t = 1;
-    cin >> t;
+    // cin >> t;
     f(tt,1,t+1) {
         // cerr << "Case #" << tt << ": "<<nl;
         solve();

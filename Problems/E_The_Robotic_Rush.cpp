@@ -154,7 +154,7 @@ void solve()
 
         // left me sabse paas
         int L = lower_bound(b.begin(), b.end(), a[i]) - b.begin() - 1;
-        if (L >= 0)
+        if (L >= 0) 
         {
             int dL = a[i] - b[L];
             death = min(death, findLeftTime(maxl, dL));
