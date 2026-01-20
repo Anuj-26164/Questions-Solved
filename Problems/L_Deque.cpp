@@ -1,5 +1,5 @@
-// Qs: K_Stones
-// Time: 20:57:02
+// Qs: L_Deque
+// Time: 09:18:45
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -32,8 +32,8 @@ template <class T, class Container = vector<T>>
 using maxheap = priority_queue<T, Container, less<T>>;
 template <class T, class Container = vector<T>>
 using minheap = priority_queue<T, Container, greater<T>>;
-#define DP1(v, n) vector<bool> v((n) + 1, true)
-#define DP2(v, n, m) vector<vector<long long>> v((n) + 1, vector<long long>((m) + 1, -1))
+#define DP1(v, n) vector<long long> v((n) + 1)
+#define DP2(v, n, m) vector<vector<long long>> v((n) + 1, vector<long long>((m) + 1))
 #define pll pair<long long, long long>
 #define debug(x) cerr << #x << " = " << x << nl;
 
@@ -97,26 +97,28 @@ int msb(int mask)
 
 void solve()
 {
-    int n, k;
-    cin >> n >> k;
+    int n;
+    cin >> n;
     vin(v, n);
-    vector<bool> dp(k + 1, true);
-    f(i, 0, v[0]) dp[i] = false;
-    for (int i = 1; i <= k; i++)
+    DP2(dp, n, n);
+    // dp[l][r] will store value of (X-Y) given both players play optimally
+    //  so final answer will be dp[0][n-1]
+    // base case dp[i][i]=v[i]
+    f(i, 0, n) dp[i][i] = v[i];
+    for (int len = 2; len <= n; len++)
     {
-        bool x = true;
-        for (int j = 0; j < n; j++)
+        for (int l = 0; l + len - 1 < n; l++)
         {
-            if(i>=v[j])
-            x &= dp[i - v[j]];
+            int r = l + len - 1;
+            dp[l][r] = max(
+                v[l] - dp[l + 1][r],
+                v[r] - dp[l][r - 1]);
         }
-        if (x == false) // found atleast 1 losing state
-            dp[i] = true;
-        else
-            dp[i] = false;
     }
-    cout << (dp[k] == true ? "First" : "Second");
+
+    cout << dp[0][n - 1] << nl;
 }
+
 int32_t main()
 {
     ios::sync_with_stdio(false);

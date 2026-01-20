@@ -1,5 +1,5 @@
 // Qs: M_Candies
-// Time: 21:23:24
+// Time: 14:37:03
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -7,26 +7,33 @@ using namespace std;
 #define vl vector<long long>
 #define all(x) begin(x), end(x)
 #define pb push_back
-#define ll long long int
-#define f(k, n) for (int i = k; i < n; i++)
-#define nl '\n'
+#define int long long
+#define ll long long
+#define f(i, k, n) for (int i = k; i < n; i++)
+#define nl endl
 #define vin(v, n)               \
     vl v(n);                    \
     for (int i = 0; i < n; i++) \
     {                           \
         cin >> v[i];            \
     }
-#define vout(v, n)                  \
+#define vout(v, k, n)               \
     do                              \
     {                               \
-        for (int i = 0; i < n; i++) \
+        for (int i = k; i < n; i++) \
             cout << v[i] << " ";    \
         cout << "\n";               \
     } while (0)
 #define ff first
 #define ss second
-#define DP1(v, n) vector<long long> v((n) + 1, -1)
-#define DP2(v, n, m) vector<vector<long long>> v((n) + 1, vector<long long>((m) + 1, -1))
+#define MOD 1000000007LL
+const ll INF = 4e18;
+template <class T, class Container = vector<T>>
+using maxheap = priority_queue<T, Container, less<T>>;
+template <class T, class Container = vector<T>>
+using minheap = priority_queue<T, Container, greater<T>>;
+#define DP1(v, n) vector<long long> v((n) + 1)
+#define DP2(v, n, m) vector<vector<long long>> v((n) + 1, vector<long long>((m) + 1))
 #define pll pair<long long, long long>
 #define debug(x) cerr << #x << " = " << x << nl;
 
@@ -65,121 +72,6 @@ ostream &operator<<(ostream &os, const map<T, U> &m)
     return os << "}";
 }
 
-long long bin_exp(long long base, long long exp, long long mod)
-{
-    long long result = 1;
-    while (exp > 0)
-    {
-        if (exp & 1)
-            result = (result * base) % mod;
-        base = (base * base) % mod;
-        exp >>= 1;
-    }
-    return result;
-}
-
-// --------- DSU by Size Template ----------
-class DSU
-{
-    vector<int> parent, size;
-
-public:
-    DSU(int n)
-    {
-        parent.resize(n);
-        size.resize(n, 1);
-        for (int i = 0; i < n; i++)
-        {
-            parent[i] = i;
-        }
-    }
-
-    int find(int x)
-    {
-        if (parent[x] != x)
-        {
-            parent[x] = find(parent[x]); // Path compression
-        }
-        return parent[x];
-    }
-
-    bool unite(int x, int y)
-    {
-        int px = find(x), py = find(y);
-        if (px == py)
-            return false;
-
-        if (size[px] < size[py])
-            swap(px, py);
-        parent[py] = px;
-        size[px] += size[py];
-        return true;
-    }
-
-    bool connected(int x, int y)
-    {
-        return find(x) == find(y);
-    }
-
-    int getSize(int x)
-    {
-        return size[find(x)];
-    }
-};
-
-// --------- Prefix and Suffix Sum Functions ----------
-vl getPrefixSum(const vl &arr)
-{
-    int n = arr.size();
-    vl prefix(n);
-    prefix[0] = arr[0];
-    for (int i = 1; i < n; i++)
-    {
-        prefix[i] = prefix[i - 1] + arr[i];
-    }
-    return prefix;
-}
-
-vl getSuffixSum(const vl &arr)
-{
-    int n = arr.size();
-    vl suffix(n);
-    suffix[n - 1] = arr[n - 1];
-    for (int i = n - 2; i >= 0; i--)
-    {
-        suffix[i] = suffix[i + 1] + arr[i];
-    }
-    return suffix;
-}
-
-// Range sum query using prefix sum (0-indexed)
-ll rangeSum(const vl &prefix, int l, int r)
-{
-    if (l == 0)
-        return prefix[r];
-    return prefix[r] - prefix[l - 1];
-}
-
-bool isprime(int n)
-{
-    if (n <= 1)
-        return false;
-    if (n <= 3)
-        return true;
-    if (n % 2 == 0 || n % 3 == 0)
-        return false;
-    for (int i = 5; i * i <= n; i += 6)
-    {
-        if (n % i == 0 || n % (i + 2) == 0)
-            return false;
-    }
-    return true;
-}
-bool isValid(int x, int y, int n, int m, vector<vector<int>> &vis)
-{
-    return (x >= 0 && x < n && y >= 0 && y < m && !vis[x][y]);
-}
-
 void yes()
 {
     cout << "YES" << endl;
@@ -190,48 +82,59 @@ void no()
     cout << "NO" << endl;
 }
 
-#define msb(mask) (63 - __builtin_clzll(mask)) /// 0 -> -1
-#define lsb(mask) __builtin_ctzll(mask)        /// 0 -> 64
+int msb(int mask)
+{
+    if (mask == 0)
+        return -1;
+    return 63 - __builtin_clzll(mask);
+}
+#define lsb(mask) __builtin_ctzll(mask)
 #define cntsetbit(mask) __builtin_popcountll(mask)
 #define checkbit(mask, bit) ((mask >> bit) & 1ll)
 #define onbit(mask, bit) ((mask) | (1LL << (bit)))
 #define offbit(mask, bit) ((mask) & ~(1LL << (bit)))
 #define changebit(mask, bit) ((mask) ^ (1LL << bit))
 
-const int N = 1001, M = 11, MOD = 1e9 + 7;
-// ll n, m, dp[M][N][N];
 void solve()
 {
-    ll n, k;
+    int n, k;
     cin >> n >> k;
-    vl a(n + 1);
-    f(1, n + 1) cin >> a[i];
-    vector<vector<ll>> dp(n + 1, vector<ll>(k + 1, 0));
-    for (int i = 0; i <= a[1]; i++)
+    vector<int> candies(n + 1);
+    f(i, 1, n + 1) cin >> candies[i];
+    DP2(dp, n, k);
+    // dp[i][j] will store no of ways to distribute exactly j candies amongst "first i children"
+    // therefore final answer must be dp[n][k]
+    // and base case will dp[0][0]=1,dp[0][j]=0;
+    // transition dp[i][j] = dp[i-1][j] + dp[i-1][j-1] + dp[i-1][j-2] .... dp[i-1][0]
+    dp[0][0] = 1;
+    for (int i = 1; i <= n; i++)
     {
-        dp[1][i] = 1;
-    }
-    for (int i = 2; i <= n; i++)
-    {
-        vl prefix(k + 1, 0);
+        vector<int> prefix(k + 1, 0);
         prefix[0] = dp[i - 1][0];
         for (int j = 1; j <= k; j++)
+            prefix[j] = (prefix[j - 1] + dp[i - 1][j]) % MOD;
+
+        for (int j = 0; j <= k; j++)
         {
-            prefix[j] = prefix[j - 1] + dp[i - 1][j];
-        }
-        for (int s = 0; s <= k; s++)
-        {
-            dp[i][s] = (dp[i][s] + prefix[s] + MOD - (s - a[i] - 1 < 0 ? 0 : prefix[s - a[i] - 1])) % MOD;
+            int left = j - candies[i] - 1;
+            dp[i][j] = prefix[j];
+            if (left >= 0)
+                dp[i][j] = (dp[i][j] - prefix[left] + MOD) % MOD;
         }
     }
-    cout << dp[n][k];
+    cout << dp[n][k] << nl;
 }
-int main()
+
+int32_t main()
 {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+    int t = 1;
+    // cin >> t;
+    f(tt, 1, t + 1)
     {
+        // cerr << "Case #" << tt << ": "<<nl;
         solve();
     }
     return 0;
