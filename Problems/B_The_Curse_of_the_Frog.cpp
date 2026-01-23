@@ -1,5 +1,5 @@
-// Qs: A_Souvlaki_VS_Kalamaki
-// Time: 19:02:25
+// Qs: B_The_Curse_of_the_Frog
+// Time: 20:20:35
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -17,7 +17,7 @@ using namespace std;
     {                           \
         cin >> v[i];            \
     }
-#define vout(v, i, k, n)            \
+#define vout(v, k, n)               \
     do                              \
     {                               \
         for (int i = k; i < n; i++) \
@@ -32,8 +32,8 @@ template <class T, class Container = vector<T>>
 using maxheap = priority_queue<T, Container, less<T>>;
 template <class T, class Container = vector<T>>
 using minheap = priority_queue<T, Container, greater<T>>;
-#define DP1(v, n) vector<long long> v((n) + 1, -1)
-#define DP2(v, n, m) vector<vector<long long>> v((n) + 1, vector<long long>((m) + 1, -1))
+#define DP1(v, n) vector<long long> v((n) + 1)
+#define DP2(v, n, m) vector<vector<long long>> v((n) + 1, vector<long long>((m) + 1))
 #define pll pair<long long, long long>
 #define debug(x) cerr << #x << " = " << x << nl;
 
@@ -72,6 +72,19 @@ ostream &operator<<(ostream &os, const map<T, U> &m)
     return os << "}";
 }
 
+#ifdef ONLINE_JUDGE
+#include <chrono>
+using namespace chrono;
+#define TIMER_START auto __start = high_resolution_clock::now();
+#define TIMER_END(msg)                                                                  \
+    cerr << msg << ": "                                                                 \
+         << duration_cast<milliseconds>(high_resolution_clock::now() - __start).count() \
+         << " ms\n";
+#else
+#define TIMER_START
+#define TIMER_END(msg)
+#endif
+
 void yes()
 {
     cout << "YES" << endl;
@@ -97,23 +110,37 @@ int msb(int mask)
 
 void solve()
 {
-    int n;
-    cin >> n;
-    vin(a, n);
-    sort(all(a));
-    bool poss = true;
-    for (int i = 1; i < n; i += 2)
+    int n, x;
+    cin >> n >> x;
+
+    int free = 0;
+    int mxstep = LLONG_MIN;
+
+    for (int i = 0; i < n; ++i)
     {
-        if (i + 1 < n && a[i] != a[i + 1])
-        {
-            poss = false;
-            break;
-        }
+        int a, b, c;
+        cin >> a >> b >> c;
+
+        free += (b - 1) * a;
+
+        mxstep = max(
+            mxstep,
+            b * a - c);
     }
-    if (poss)
-        yes();
-    else
-        no();
+
+    if (free >= x)
+    {
+        cout << 0 << nl;
+        return;
+    }
+
+    if (mxstep <= 0)
+    {
+        cout << -1 << nl;
+        return;
+    }
+    int rem = x - free;
+    cout << (rem + mxstep - 1) / mxstep << nl;
 }
 
 int32_t main()
@@ -123,12 +150,12 @@ int32_t main()
     cout.tie(nullptr);
     int t = 1;
     cin >> t;
-    int tt = 1;
-    while (t--)
+    f(tt, 1, t + 1)
     {
+        TIMER_START
         // cerr << "Case #" << tt << ": "<<nl;
         solve();
-        tt++;
+        TIMER_END("Time")
     }
     return 0;
 }

@@ -1,5 +1,5 @@
-// Qs: B_MEX_Reordering
-// Time: 20:12:58
+// Qs: D_1_Little_String_Easy_Version
+// Time: 21:32:10
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -12,7 +12,7 @@ using namespace std;
 #define f(i,k,n) for(int i=k;i<n;i++)
 #define nl endl
 #define vin(v, n) vl v(n); for (int i = 0; i < n; i++) {cin>>v[i];}
-#define vout(v,i,k,n) do { for (int i = k; i < n; i++) cout << v[i] << " "; cout << "\n"; } while(0)
+#define vout(v,k,n) do { for (int i = k; i < n; i++) cout << v[i] << " "; cout << "\n"; } while(0)
 #define ff first
 #define ss second
 #define MOD 1000000007LL
@@ -21,8 +21,8 @@ template<class T, class Container = vector<T>>
 using maxheap = priority_queue<T, Container, less<T>>;
 template<class T, class Container = vector<T>>
 using minheap = priority_queue<T, Container, greater<T>>;
-#define DP1(v, n) vector<long long> v((n)+1, -1)
-#define DP2(v, n, m) vector<vector<long long>> v((n)+1, vector<long long>((m)+1, -1))
+#define DP1(v, n) vector<long long> v((n)+1)
+#define DP2(v, n, m) vector<vector<long long>> v((n)+1, vector<long long>((m)+1))
 #define pll pair<long long,long long>
 #define debug(x) cerr << #x << " = " << x << nl;
 
@@ -54,6 +54,19 @@ ostream& operator<<(ostream &os, const map<T,U> &m) {
     return os << "}";
 }
 
+#ifdef ONLINE_JUDGE
+#include <chrono>
+using namespace chrono;
+#define TIMER_START auto __start = high_resolution_clock::now();
+#define TIMER_END(msg) \
+    cerr << msg << ": " \
+         << duration_cast<milliseconds>(high_resolution_clock::now() - __start).count() \
+         << " ms\n";
+#else
+#define TIMER_START
+#define TIMER_END(msg)
+#endif
+
 
 void yes() {
     cout << "YES" << endl;
@@ -75,23 +88,48 @@ int msb(int mask) {
 #define changebit(mask,bit) ((mask)^(1LL<<bit))
 
 void solve() {
-    int n;
-    cin >> n;
-    vin(v, n);
-    map<int, int> mp;
-    f(i, 0, n) mp[v[i]]++;
-    if(mp[0]==0)
+    int n,c;
+    string s;
+    cin >> n >> c >> s;
+
+    if (c == 1)
     {
-        no();
+        cout << -1 << nl;
+        return;
     }
-    else if(mp[0]==1)
+
+    if (s[0] == '0' || s[n - 1] == '0')
     {
-        yes();
+        cout << -1 << "\n";
+        return;
     }
-    else if(mp[0]>=2 && mp[1]>=1)
-        yes();
+
+    long long ansM = 1;
+    long long ansC = 1 % c;
+
+    for (int i = 1; i <= n - 1; i++)
+    {
+        long long mul;
+        if (s[i - 1] == '1')
+            mul = 2;
+        else
+        {
+            if (i == 1)
+            {
+                ansM = 0;
+                ansC = 0;
+                break;
+            }
+            mul = i - 1;
+        }
+        ansM = (ansM * mul) % MOD;
+        ansC = (ansC * mul) % c;
+    }
+
+    if (ansC % c == 0)
+        cout << -1 << "\n";
     else
-        no();
+        cout << ansM << "\n";
 }
 
 int32_t main() {
@@ -100,11 +138,11 @@ int32_t main() {
     cout.tie(nullptr);
     int t = 1;
     cin >> t;
-    int tt = 1;
-    while (t--) {
+    f(tt,1,t+1) {
+        TIMER_START
         // cerr << "Case #" << tt << ": "<<nl;
         solve();
-        tt++;
+        TIMER_END("Time")
     }
     return 0;
 }

@@ -1,5 +1,5 @@
-// Qs: C_Sorting_Game
-// Time: 20:59:30
+// Qs: Digit_Queries
+// Time: 16:06:24
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -17,7 +17,7 @@ using namespace std;
     {                           \
         cin >> v[i];            \
     }
-#define vout(v, i, k, n)            \
+#define vout(v, k, n)               \
     do                              \
     {                               \
         for (int i = k; i < n; i++) \
@@ -32,8 +32,8 @@ template <class T, class Container = vector<T>>
 using maxheap = priority_queue<T, Container, less<T>>;
 template <class T, class Container = vector<T>>
 using minheap = priority_queue<T, Container, greater<T>>;
-#define DP1(v, n) vector<long long> v((n) + 1, -1)
-#define DP2(v, n, m) vector<vector<long long>> v((n) + 1, vector<long long>((m) + 1, -1))
+#define DP1(v, n) vector<long long> v((n) + 1)
+#define DP2(v, n, m) vector<vector<long long>> v((n) + 1, vector<long long>((m) + 1))
 #define pll pair<long long, long long>
 #define debug(x) cerr << #x << " = " << x << nl;
 
@@ -72,6 +72,19 @@ ostream &operator<<(ostream &os, const map<T, U> &m)
     return os << "}";
 }
 
+#ifdef ONLINE_JUDGE
+#include <chrono>
+using namespace chrono;
+#define TIMER_START auto __start = high_resolution_clock::now();
+#define TIMER_END(msg)                                                                  \
+    cerr << msg << ": "                                                                 \
+         << duration_cast<milliseconds>(high_resolution_clock::now() - __start).count() \
+         << " ms\n";
+#else
+#define TIMER_START
+#define TIMER_END(msg)
+#endif
+
 void yes()
 {
     cout << "YES" << endl;
@@ -97,36 +110,24 @@ int msb(int mask)
 
 void solve()
 {
-    int n;
-    cin >> n;
-    string s;
-    cin >> s;
-    string t = s;
-    sort(all(t));
-    if (t == s)
+    long long k;
+    cin >> k;
+
+    long long digits = 1, cnt = 9, start = 1;
+
+    while (k > digits * cnt)
     {
-        cout << "Bob" << nl;
-        return;
+        k -= digits * cnt;
+        digits++;
+        cnt *= 10;
+        start *= 10;
     }
-    else
-    {
-        vector<int> pos;
-        for (int i = n - 1; i >= 0; i--)
-        {
-            if (t[i] == '1' && s[i] != t[i])
-                pos.emplace_back(i);
-            else if(t[i]=='0'&&s[i]=='1')
-                pos.emplace_back(i);
-        }
-        sort(all(pos));
-        cout << "Alice" << nl;
-        cout << pos.size() << nl;
-        for (auto x : pos)
-        {
-            cout << x+1 << " ";
-        }
-        cout << nl;
-    }
+
+    long long number = start + (k - 1) / digits;
+    int digit_index = (k - 1) % digits;
+
+    string s = to_string(number);
+    cout << s[digit_index] << '\n';
 }
 
 int32_t main()
@@ -135,13 +136,21 @@ int32_t main()
     cin.tie(nullptr);
     cout.tie(nullptr);
     int t = 1;
-    cin >> t;
-    int tt = 1;
-    while (t--)
+    vector<int> dig;
+    dig.emplace_back(9);
+    int p = 10;
+    f(i, 1, 17)
     {
+        dig.emplace_back(9 * p * (i + 1) + dig.back());
+        p *= 10;
+    }
+    cin >> t;
+    f(tt, 1, t + 1)
+    {
+        TIMER_START
         // cerr << "Case #" << tt << ": "<<nl;
         solve();
-        tt++;
+        TIMER_END("Time")
     }
     return 0;
 }

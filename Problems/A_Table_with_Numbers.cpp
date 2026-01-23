@@ -1,5 +1,5 @@
-// Qs: A_Notelock
-// Time: 19:14:16
+// Qs: A_Table_with_Numbers
+// Time: 20:07:00
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -17,7 +17,7 @@ using namespace std;
     {                           \
         cin >> v[i];            \
     }
-#define vout(v, i, k, n)            \
+#define vout(v, k, n)               \
     do                              \
     {                               \
         for (int i = k; i < n; i++) \
@@ -32,8 +32,8 @@ template <class T, class Container = vector<T>>
 using maxheap = priority_queue<T, Container, less<T>>;
 template <class T, class Container = vector<T>>
 using minheap = priority_queue<T, Container, greater<T>>;
-#define DP1(v, n) vector<long long> v((n) + 1, -1)
-#define DP2(v, n, m) vector<vector<long long>> v((n) + 1, vector<long long>((m) + 1, -1))
+#define DP1(v, n) vector<long long> v((n) + 1)
+#define DP2(v, n, m) vector<vector<long long>> v((n) + 1, vector<long long>((m) + 1))
 #define pll pair<long long, long long>
 #define debug(x) cerr << #x << " = " << x << nl;
 
@@ -72,6 +72,19 @@ ostream &operator<<(ostream &os, const map<T, U> &m)
     return os << "}";
 }
 
+#ifdef ONLINE_JUDGE
+#include <chrono>
+using namespace chrono;
+#define TIMER_START auto __start = high_resolution_clock::now();
+#define TIMER_END(msg)                                                                  \
+    cerr << msg << ": "                                                                 \
+         << duration_cast<milliseconds>(high_resolution_clock::now() - __start).count() \
+         << " ms\n";
+#else
+#define TIMER_START
+#define TIMER_END(msg)
+#endif
+
 void yes()
 {
     cout << "YES" << endl;
@@ -97,27 +110,25 @@ int msb(int mask)
 
 void solve()
 {
-    int n, k;
-    cin >> n >> k;
-    string s;
-    cin >> s;
-    int ans = 0;
-    int r = 0, cnt = -1;
-    while (r < n)
+    int n, h, l;
+    cin >> n >> h >> l;
+
+    int a = 0, b = 0, d = 0;
+    int mn = min(h, l);
+
+    for (int i = 0; i < n; i++)
     {
-        if (s[r] == '1')
-        {
-            if (cnt < 0)
-                ans++;
-            cnt = k - 2;
-            r++;
-        }
-        else
-        {
-            r++;
-            cnt--;
-        }
+        int x;
+        cin >> x;
+        if (x <= mn)
+            d++;
+        else if (x <= h)
+            a++;
+        else if (x <= l)
+            b++;
     }
+
+    int ans = min(min(a + d, b + d), (a + b + d) / 2);
     cout << ans << nl;
 }
 
@@ -128,12 +139,12 @@ int32_t main()
     cout.tie(nullptr);
     int t = 1;
     cin >> t;
-    int tt = 1;
-    while (t--)
+    f(tt, 1, t + 1)
     {
+        TIMER_START
         // cerr << "Case #" << tt << ": "<<nl;
         solve();
-        tt++;
+        TIMER_END("Time")
     }
     return 0;
 }

@@ -1,5 +1,5 @@
-// Qs: A_Array_Coloring
-// Time: 20:06:36
+// Qs: C_1_XOR_Convenience_Easy_Version
+// Time: 21:18:43
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -17,7 +17,7 @@ using namespace std;
     {                           \
         cin >> v[i];            \
     }
-#define vout(v, i, k, n)            \
+#define vout(v, k, n)               \
     do                              \
     {                               \
         for (int i = k; i < n; i++) \
@@ -32,8 +32,8 @@ template <class T, class Container = vector<T>>
 using maxheap = priority_queue<T, Container, less<T>>;
 template <class T, class Container = vector<T>>
 using minheap = priority_queue<T, Container, greater<T>>;
-#define DP1(v, n) vector<long long> v((n) + 1, -1)
-#define DP2(v, n, m) vector<vector<long long>> v((n) + 1, vector<long long>((m) + 1, -1))
+#define DP1(v, n) vector<long long> v((n) + 1)
+#define DP2(v, n, m) vector<vector<long long>> v((n) + 1, vector<long long>((m) + 1))
 #define pll pair<long long, long long>
 #define debug(x) cerr << #x << " = " << x << nl;
 
@@ -72,6 +72,19 @@ ostream &operator<<(ostream &os, const map<T, U> &m)
     return os << "}";
 }
 
+#ifdef ONLINE_JUDGE
+#include <chrono>
+using namespace chrono;
+#define TIMER_START auto __start = high_resolution_clock::now();
+#define TIMER_END(msg)                                                                  \
+    cerr << msg << ": "                                                                 \
+         << duration_cast<milliseconds>(high_resolution_clock::now() - __start).count() \
+         << " ms\n";
+#else
+#define TIMER_START
+#define TIMER_END(msg)
+#endif
+
 void yes()
 {
     cout << "YES" << endl;
@@ -99,36 +112,21 @@ void solve()
 {
     int n;
     cin >> n;
-    vector<pair<int, pair<int, int>>> vp(n);
-    f(i, 0, n)
-    {
-        cin >> vp[i].ff;
-        vp[i].ss.ff = i;
-    }
-    sort(all(vp), [](pair<int, pair<int, int>> &a, pair<int, pair<int, int>> &b)
-         { return a.ff < b.ff; });
-    f(i, 0, n)
-    {
-        if (i & 1)
-            vp[i].ss.ss = 1;
-        else
-            vp[i].ss.ss = 0;
-    }
-    bool f = true;
-    sort(all(vp), [](pair<int, pair<int, int>> &a, pair<int, pair<int, int>> &b)
-         { return a.ss.ff < b.ss.ff; });
-    f(i, 0, n - 1)
-    {
-        if (vp[i].ss.ss == vp[i + 1].ss.ss)
-        {
-            f = false;
-            break;
-        }
-    }
-    if (f)
-        yes();
+    vector<int> p(n + 1);
+    p[n] = 1;
+    for (int i = 2; i < n; i++)
+        p[i] = i ^ 1;
+    if (!(n & 1))
+        p[1] = n;
     else
-        no();
+        p[1] = n - 1;
+    for (int i = 1; i <= n; i++)
+    {
+        cout << p[i];
+        if (i < n)
+            cout << " ";
+    }
+    cout << nl;
 }
 
 int32_t main()
@@ -138,12 +136,12 @@ int32_t main()
     cout.tie(nullptr);
     int t = 1;
     cin >> t;
-    int tt = 1;
-    while (t--)
+    f(tt, 1, t + 1)
     {
+        TIMER_START
         // cerr << "Case #" << tt << ": "<<nl;
         solve();
-        tt++;
+        TIMER_END("Time")
     }
     return 0;
 }

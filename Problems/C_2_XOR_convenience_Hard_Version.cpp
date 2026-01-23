@@ -1,5 +1,5 @@
-// Qs: D_1_Sub_RBS_Easy_Version
-// Time: 21:21:41
+// Qs: C_2_XOR_convenience_Hard_Version
+// Time: 21:25:47
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -17,7 +17,7 @@ using namespace std;
     {                           \
         cin >> v[i];            \
     }
-#define vout(v, i, k, n)            \
+#define vout(v, k, n)               \
     do                              \
     {                               \
         for (int i = k; i < n; i++) \
@@ -32,8 +32,8 @@ template <class T, class Container = vector<T>>
 using maxheap = priority_queue<T, Container, less<T>>;
 template <class T, class Container = vector<T>>
 using minheap = priority_queue<T, Container, greater<T>>;
-#define DP1(v, n) vector<long long> v((n) + 1, -1)
-#define DP2(v, n, m) vector<vector<long long>> v((n) + 1, vector<long long>((m) + 1, -1))
+#define DP1(v, n) vector<long long> v((n) + 1)
+#define DP2(v, n, m) vector<vector<long long>> v((n) + 1, vector<long long>((m) + 1))
 #define pll pair<long long, long long>
 #define debug(x) cerr << #x << " = " << x << nl;
 
@@ -72,6 +72,19 @@ ostream &operator<<(ostream &os, const map<T, U> &m)
     return os << "}";
 }
 
+#ifdef ONLINE_JUDGE
+#include <chrono>
+using namespace chrono;
+#define TIMER_START auto __start = high_resolution_clock::now();
+#define TIMER_END(msg)                                                                  \
+    cerr << msg << ": "                                                                 \
+         << duration_cast<milliseconds>(high_resolution_clock::now() - __start).count() \
+         << " ms\n";
+#else
+#define TIMER_START
+#define TIMER_END(msg)
+#endif
+
 void yes()
 {
     cout << "YES" << endl;
@@ -95,33 +108,63 @@ int msb(int mask)
 #define offbit(mask, bit) ((mask) & ~(1LL << (bit)))
 #define changebit(mask, bit) ((mask) ^ (1LL << bit))
 
+void dfs(int i, int n,
+         vector<int> &p,
+         set<int> &curr,
+         set<int> &done)
+{
+    if (i == 0)
+        return;
+
+    int best_val = -1;
+    for (int u : curr)
+    {
+        int v = u ^ i;
+        if (v >= 1 && v <= n && !done.count(v))
+        {
+            best_val = v;
+            break;
+        }
+    }
+
+    if (best_val == -1)
+    {
+        cout << -1 << nl;
+        exit(0);
+    }
+
+    p[i] = best_val;
+    done.insert(best_val);
+    curr.insert(best_val);
+
+    dfs(i - 1, n, p, curr, done);
+}
+
 void solve()
 {
     int n;
     cin >> n;
-    string s;
-    cin >> s;
-
-    vector<int> suffix(n + 10, 0);
-    for (int i = n; i >= 1; i--)
+    if ((n & (n - 1)) == 0)
     {
-        suffix[i] = suffix[i + 1] + (s[i - 1] == '(');
-    }
-    bool poss = false;
-    for (int i = 1; i < n && poss == false; i++)
-    {
-        if (s[i - 1] == ')' && s[i] == '(' && suffix[i + 2] > 0)
-        {
-            poss = true;
-        }
-    }
-    // debug(suffix);
-    if(poss)
-        cout << n - 2 << nl;
-    else
         cout << -1 << nl;
-}
+        return;
+    }
+    vector<int> p(n + 1);
+    set<int> curr, done;
+    int root = (n & 1) ? n : msb(n);
+    p[n] = root;
+    done.insert(root);
+    curr.insert(root);
+    dfs(n - 1, n, p, curr, done);
 
+    for (int i = 1; i <= n; i++)
+    {
+        cout << p[i];
+        if (i < n)
+            cout << " ";
+    }
+    cout << nl;
+}
 int32_t main()
 {
     ios::sync_with_stdio(false);
@@ -129,12 +172,12 @@ int32_t main()
     cout.tie(nullptr);
     int t = 1;
     cin >> t;
-    int tt = 1;
-    while (t--)
+    f(tt, 1, t + 1)
     {
+        TIMER_START
         // cerr << "Case #" << tt << ": "<<nl;
         solve();
-        tt++;
+        TIMER_END("Time")
     }
     return 0;
 }
