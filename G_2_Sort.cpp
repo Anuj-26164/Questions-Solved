@@ -1,5 +1,5 @@
-// Qs: F_Pizza_Delivery
-// Time: 21:42:37
+// Qs: G_2_Sort
+// Time: 16:11:10
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -50,16 +50,6 @@ template <typename T, typename U>
 ostream &operator<<(ostream &os, const pair<T, U> &p)
 {
     return os << "(" << p.first << ", " << p.second << ")";
-}
-
-template <typename T, typename U>
-ostream &operator<<(ostream &os, const vector<pair<T, U>> &v)
-{
-    os << "[";
-    bool f = true;
-    for (auto &x : v)
-        os << (f ? "" : ", ") << x, f = false;
-    return os << "]";
 }
 
 template <typename T>
@@ -120,50 +110,28 @@ int msb(int mask)
 
 void solve()
 {
-    int n, Ax, Ay, Bx, By;
-    cin >> n >> Ax >> Ay >> Bx >> By;
-
-    vector<pair<int, int>> vp(n);
-    f(i, 0, n) cin >> vp[i].ff;
-    f(i, 0, n) cin >> vp[i].ss;
-    map<int, vector<int>> mp;
-
-    f(i, 0, n) mp[vp[i].ff].emplace_back(vp[i].ss);
-    int curl = -1, curh = -1, prevl = -1, prevh = -1, ans = Bx - Ax;
-    // curl defined as min delivery time if last delivery at prev x is at lowest point
-    // curh defined as min delivery time if last delivery at prev x is at highest point
-
-    for (auto p = mp.begin(); p != mp.end(); p++)
+    int n, k;
+    cin >> n >> k;
+    vector<int> v(n + 1);
+    f(i, 1, n + 1) cin >> v[i];
+    int l = 1, r = 1, ans = 0;
+    while (r < n)
     {
-        sort(all((*p).ss));
-        int x = (*p).ss.size();
-        int y1 = (*p).ss[0], y2 = (*p).ss[x - 1];
-        if (prevl == -1 && prevh == -1) // base case
+        if (v[r] / 2 < v[r + 1])
         {
-            prevl = abs(y2 - Ay) + abs(y1 - y2);
-            prevh = abs(y1 - Ay) + abs(y1 - y2);
+            r++;
+            if (r - l == k)
+            {
+                ans++;
+                l++;
+            }
         }
         else
         {
-            auto x = p;
-            x--;
-            int ylp = (*x).ss[0], yhp = (*x).ss[(*x).ss.size() - 1];
-            curl = min(prevl + abs(ylp - y2) + abs(y2 - y1), prevh + abs(yhp - y2) + abs(y2 - y1));
-            curh = min(prevl + abs(ylp - y1) + abs(y2 - y1), prevh + abs(yhp - y1) + abs(y2 - y1));
-            prevl = curl;
-            prevh = curh;
+            l = r + 1;
+            r++;
         }
     }
-    // final go home
-    auto it = mp.end();
-    it--;
-    int lowY = (*it).ss[0];
-    int highY = (*it).ss[(*it).ss.size() - 1];
-
-    ans += min(
-        prevl + abs(lowY - By),
-        prevh + abs(highY - By));
-
     cout << ans << nl;
 }
 
