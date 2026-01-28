@@ -1,5 +1,5 @@
-// Qs: C_Trip_to_the_Olympiad
-// Time: 13:14:17
+// Qs: School_Trip
+// Time: 20:02:59
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -118,32 +118,20 @@ int msb(int mask)
 #define onbit(mask, bit) ((mask) |= (1LL << (bit)))
 #define offbit(mask, bit) ((mask) &= ~(1LL << (bit)))
 #define changebit(mask, bit) ((mask) ^= (1LL << bit))
+#define togglebit(mask, bit) ((mask) ^= (1LL << (bit)))
 
 void solve()
 {
-    int l, r;
-    cin >> l >> r;
-    int c = r; // kyuki r me msb set hoga
-    // lets find b, i need to iterate from msb of c=r and check whether i can set the corresponding bits where c isnt set in b within given range [l,r]
-    int b = -1;
-    for (int x = msb(c) - 1; x >= 0; x--)
+    int N, X, K;
+    cin >> N >> X >> K;
+
+    int ans = INT_MAX;
+    for (int y = 0; y <= N; y += K)
     {
-        if (checkbit(c, x) == 0 && (1 << x) >= l)
-        {
-            onbit(b, x);
-        }
+        ans = min(ans, abs(X - y));
     }
-    if (b == -1) // either all bits of c are set or any value is not within range
-    {
-        if (((c + 1) & (c)) == 0) // all bits of c are set in this case choosing any b is dangerous as it can unset any set bit of c so we choose least damaging value i.e c-1
-            b = l + 1;
-        else // any value is not within range , again choosing c - 1 should be optimal
-            b = l + 1;
-    }
-    // lets construct a,value of a must be such that it damages c least and then b
-    // choosing a=l suffices these conditions
-    int a = l;
-    cout << a << " " << b << " " << c << nl;
+
+    cout << ans << nl;
 }
 
 int32_t main()

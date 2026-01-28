@@ -1,5 +1,5 @@
-// Qs: C_Trip_to_the_Olympiad
-// Time: 13:14:17
+// Qs: Less_than_Max
+// Time: 20:04:33
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -118,14 +118,44 @@ int msb(int mask)
 #define onbit(mask, bit) ((mask) |= (1LL << (bit)))
 #define offbit(mask, bit) ((mask) &= ~(1LL << (bit)))
 #define changebit(mask, bit) ((mask) ^= (1LL << bit))
+#define togglebit(mask, bit) ((mask) ^= (1LL << (bit)))
 
 void solve()
 {
-    int l, r;
-    cin >> l >> r;
-    int k = 31 - __builtin_clz(l ^ r);
-    int a = l | ((1 << k) - 1), b = a + 1, c = (a == l ? r : l);
-    std::cout << a << " " << b << " " << c << "\n";
+    int ans = 0;
+    int n;
+    cin >> n;
+    vector<int> v(n);
+    multiset<int> st;
+    bool f = false;
+    int idx = -1;
+    f(i, 0, n)
+    {
+        cin >> v[i];
+        if (v[i] == 1 && !f)
+        {
+            f = true;
+            idx = i;
+        }
+    }
+    if (!f)
+    {
+        cout << 0 << nl;
+        rn;
+    }
+    else
+    {
+        multiset<int> mst;
+        f(i, idx, n)
+        {
+            if (v[i] == 1)
+                ans++;
+            else
+                ans += mst.count(v[i] - 1) > 0 ? 1 : 0;
+            mst.insert(v[i]);
+        }
+        cout << ans << nl;
+    }
 }
 
 int32_t main()

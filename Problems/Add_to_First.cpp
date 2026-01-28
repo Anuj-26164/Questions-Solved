@@ -1,5 +1,5 @@
-// Qs: C_Trip_to_the_Olympiad
-// Time: 13:14:17
+// Qs: Add_to_First
+// Time: 20:21:43
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -98,12 +98,12 @@ using namespace chrono;
 
 void yes()
 {
-    cout << "YES" << endl;
+    cout << "Yes" << endl;
 }
 
 void no()
 {
-    cout << "NO" << endl;
+    cout << "No" << endl;
 }
 
 int msb(int mask)
@@ -118,14 +118,33 @@ int msb(int mask)
 #define onbit(mask, bit) ((mask) |= (1LL << (bit)))
 #define offbit(mask, bit) ((mask) &= ~(1LL << (bit)))
 #define changebit(mask, bit) ((mask) ^= (1LL << bit))
+#define togglebit(mask, bit) ((mask) ^= (1LL << (bit)))
 
 void solve()
 {
-    int l, r;
-    cin >> l >> r;
-    int k = 31 - __builtin_clz(l ^ r);
-    int a = l | ((1 << k) - 1), b = a + 1, c = (a == l ? r : l);
-    std::cout << a << " " << b << " " << c << "\n";
+    int n;
+    cin >> n;
+    vin(a, n);
+    vin(b, n);
+    int mx = 0;
+    f (i,0,n)
+    {
+        if (a[i] > b[i])
+        {
+            no();
+            rn;
+        }
+        if (a[i] < b[i])
+        {
+            if (a[i] <= mx)
+            {
+                no();
+                rn;
+            }
+        }
+        mx = max(mx, a[i]);
+    }
+    yes();
 }
 
 int32_t main()
