@@ -120,11 +120,11 @@ int msb(int mask)
 #define changebit(mask, bit) ((mask) ^= (1LL << bit))
 #define togglebit(mask, bit) ((mask) ^= (1LL << (bit)))
 
-bool pred(const vector<int> &a, const vector<int> &b, int x, int y, int m)
+bool pred(const vector<int> &a, const vector<int> &b, int mn, int mx, int k)
 {
-    int l = y - m;
-    int r = x + m;
-    if (l < r)
+    int l = mx - k;
+    int r = mn + k;
+    // if (l < r)
     {
         int L = lower_bound(b.begin(), b.end(), l + 1) - b.begin();
         int R = lower_bound(b.begin(), b.end(), r) - b.begin();
@@ -149,13 +149,13 @@ void solve()
         return;
     }
     vector<int> b = a;
-    int x = *min_element(all(a)), y = *max_element(all(a));
+    int mn = *min_element(all(a)), mx = *max_element(all(a));
     sort(all(b));
     int l = 1, r = 1e9, ans = 1;
     while (l <= r)
     {
         int m = (r + l) / 2;
-        if (pred(a,b,x,y,m))
+        if (pred(a,b,mn,mx,m))
         {
             ans = m;
             l = m + 1;
