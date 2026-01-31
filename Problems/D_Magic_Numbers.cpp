@@ -1,5 +1,5 @@
-// Qs: Eko
-// Time: 00:20:54
+// Qs: D_Magic_Numbers
+// Time: 14:23:17
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -119,32 +119,55 @@ int msb(int mask)
 #define offbit(mask, bit) ((mask) &= ~(1LL << (bit)))
 #define changebit(mask, bit) ((mask) ^= (1LL << bit))
 #define togglebit(mask, bit) ((mask) ^= (1LL << (bit)))
-int n, m;
 
-bool pred(int mid, const vector<int> &v) // i need to check how much wood i can accumulate by cutting at height=mid
+int m, d;
+string a, b;
+int dp[2002][2][2002];
+int cnt(int pos, bool tight, int rem, string &a)
 {
-    int got = 0;
-    f(i, 0, n) got += (v[i] - mid > 0 ? v[i] - mid : 0);
-    return got >= m;
+    if (pos == a.size())
+        return (rem == 0) ? 1 : 0;
+    if (dp[pos][tight][rem] != -1)
+        return dp[pos][tight][rem];
+    int lim, res = 0, newrem;
+    if (tight)
+        lim = a[pos] - '0';
+    else
+        lim = 9;
+    for (int dig = 0; dig <= lim; dig++)
+    {
+        bool t = tight && (dig == lim);
+        if ((pos & 1)) // pos is odd I can take only take dig=d
+        {
+            if (dig == d)
+            {
+                newrem = (rem * 10 + dig) % m;
+                res = (res + cnt(pos + 1, t, newrem, a)) % MOD; // take d
+            }
+        }
+        else // pos is odd I can take any dig<=lim except 'd'
+        {
+            if (dig != d)
+            {
+                newrem = (rem * 10 + dig) % m;
+                res = (res + cnt(pos + 1, t, newrem, a)) % MOD;
+            }
+        }
+    }
+    return dp[pos][tight][rem] = res;
 }
 void solve()
 {
-    cin >> n >> m;
-    vin(v, n);
-    int lo = 0, hi = 1000000000;
-    int ans = 0;
-    while (hi >= lo)
-    {
-        int mid = (lo + (hi - lo) / 2);
-        if (pred(mid, v)) // i have obtained M wood so i can further increase my height of saw
-        {
-            ans = mid;
-            lo = mid + 1;
-        }
-        else
-            hi = mid - 1;
-    }
-    cout << ans << nl;
+    // call a number d-magic if digit d appears in decimal presentation of the number on even positions and nowhere else.
+    // At which position we are, if the number has already become smaller than b and the frequency of digit d till now.
+    cin >> m >> d;
+    cin >> a >> b;
+    memset(dp, -1, sizeof(dp));
+    a.back() -= 1;
+    int r = cnt(0, 1, 0, b);
+    memset(dp, -1, sizeof(dp));
+    int l = cnt(0, 1, 0, a);
+    cout<< (r - l + MOD) % MOD;
 }
 
 int32_t main()
